@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
-	<declaration>// Place global declarations here.</declaration>
+	<declaration>// Place global declarations here.
+chan Yellow, Black;</declaration>
 	<template>
 		<name>Sensor</name>
 		<location id="id0" x="-51" y="-119">
@@ -24,6 +25,7 @@
 	</template>
 	<template>
 		<name>DistributionBelt1</name>
+		<parameter>chan &amp;Black, chan &amp;Yellow</parameter>
 		<location id="id1" x="305" y="-424">
 			<name x="262" y="-458">DestinationB</name>
 			<label kind="comments" x="220" y="-475">Destination of Yellow bags</label>
@@ -64,6 +66,7 @@
 		<transition>
 			<source ref="id3"/>
 			<target ref="id4"/>
+			<label kind="synchronisation" x="-153" y="-153">Yellow?</label>
 		</transition>
 		<transition>
 			<source ref="id2"/>
@@ -89,6 +92,7 @@
 		<transition>
 			<source ref="id3"/>
 			<target ref="id9"/>
+			<label kind="synchronisation" x="-340" y="-153">Black?</label>
 		</transition>
 		<transition>
 			<source ref="id10"/>
@@ -105,6 +109,7 @@
 	</template>
 	<template>
 		<name>DistributionBelt2</name>
+		<parameter>chan &amp;Black, chan &amp;Yellow</parameter>
 		<location id="id11" x="305" y="-424">
 			<name x="262" y="-458">DestinationA</name>
 			<label kind="comments" x="220" y="-475">Destination of Black bags</label>
@@ -145,6 +150,7 @@
 		<transition>
 			<source ref="id13"/>
 			<target ref="id14"/>
+			<label kind="synchronisation" x="-144" y="-153">Black?</label>
 		</transition>
 		<transition>
 			<source ref="id12"/>
@@ -170,6 +176,7 @@
 		<transition>
 			<source ref="id13"/>
 			<target ref="id19"/>
+			<label kind="synchronisation" x="-340" y="-153">Yellow?</label>
 		</transition>
 		<transition>
 			<source ref="id20"/>
@@ -185,8 +192,9 @@
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
-Bag1 = DistributionBelt1();
-Bag2 = DistributionBelt2();
+Bag1 = DistributionBelt1(Black, Yellow);
+Bag2 = DistributionBelt2(Black, Yellow);
+
 // List one or more processes to be composed into a system.
 system Bag1, Bag2, Sensor;
     </system>
