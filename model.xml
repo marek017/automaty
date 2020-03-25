@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.</declaration>
+	<template>
+		<name>Sensor</name>
+		<location id="id0" x="-51" y="-119">
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-212" y="-127">Yellow!</label>
+			<nail x="-161" y="-68"/>
+			<nail x="-161" y="-178"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="68" y="-127">Black!</label>
+			<nail x="59" y="-68"/>
+			<nail x="59" y="-178"/>
+		</transition>
+	</template>
+	<template>
+		<name>DistributionBelt</name>
+		<location id="id1" x="365" y="-161">
+			<name x="331" y="-144">Section2D</name>
+		</location>
+		<location id="id2" x="-59" y="-255">
+			<name x="-78" y="-289">SectionF</name>
+		</location>
+		<location id="id3" x="-484" y="-161">
+			<name x="-518" y="-144">Section1D</name>
+		</location>
+		<location id="id4" x="-680" y="-646">
+			<name x="-722" y="-680">DestinationA</name>
+			<label kind="comments" x="-765" y="-697">Destination of Black bags</label>
+		</location>
+		<location id="id5" x="-680" y="-255">
+			<name x="-714" y="-238">Section1E</name>
+		</location>
+		<location id="id6" x="-484" y="-357">
+			<name x="-467" y="-365">Section1B</name>
+		</location>
+		<location id="id7" x="-484" y="-450">
+			<name x="-467" y="-459">Section1A</name>
+		</location>
+		<location id="id8" x="-59" y="-552">
+		</location>
+		<location id="id9" x="365" y="-552">
+			<name x="306" y="-586">arrivedCheckin2</name>
+		</location>
+		<location id="id10" x="-484" y="-552">
+			<name x="-527" y="-586">arrivedCheckin1</name>
+		</location>
+		<location id="id11" x="365" y="-450">
+			<name x="382" y="-458">Section2A</name>
+		</location>
+		<location id="id12" x="365" y="-356">
+			<name x="382" y="-364">Section2B</name>
+		</location>
+		<location id="id13" x="-484" y="-255">
+			<name x="-467" y="-280">Section1C</name>
+		</location>
+		<location id="id14" x="561" y="-255">
+			<name x="535" y="-238">Section2E</name>
+		</location>
+		<location id="id15" x="561" y="-646">
+			<name x="518" y="-680">DestinationB</name>
+			<label kind="comments" x="476" y="-697">Destination of Yellow bags</label>
+		</location>
+		<location id="id16" x="365" y="-254">
+			<name x="382" y="-279">Section2C</name>
+		</location>
+		<init ref="id8"/>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id8"/>
+			<nail x="-17" y="-646"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id8"/>
+			<nail x="-102" y="-646"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<nail x="-16" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id14"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id5"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<nail x="-110" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id2"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id2"/>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id16"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id5"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id13"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id11"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id7"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id6"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id9"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id10"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id15"/>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id14"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Bag1 = DistributionBelt();
+Bag2 = DistributionBelt();
+// List one or more processes to be composed into a system.
+system Bag1, Bag2, Sensor;
+    </system>
+	<queries>
+	</queries>
+</nta>
