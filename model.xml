@@ -2,7 +2,8 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-chan Yellow, Black;</declaration>
+chan Broadcast;
+bool isBlack, isForward, isBlocked;</declaration>
 	<template>
 		<name>Sensor</name>
 		<location id="id0" x="-51" y="-119">
@@ -11,193 +12,279 @@ chan Yellow, Black;</declaration>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id0"/>
-			<label kind="synchronisation" x="-212" y="-127">Yellow!</label>
+			<label kind="guard" x="-272" y="-170">isBlocked</label>
+			<label kind="synchronisation" x="-272" y="-153">Broadcast?</label>
+			<label kind="assignment" x="-272" y="-136">isBlack:=false, 
+isBlocked:=false</label>
 			<nail x="-161" y="-68"/>
 			<nail x="-161" y="-178"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id0"/>
-			<label kind="synchronisation" x="68" y="-127">Black!</label>
+			<label kind="guard" x="68" y="-170">isBlocked</label>
+			<label kind="synchronisation" x="68" y="-153">Broadcast?</label>
+			<label kind="assignment" x="68" y="-136">isBlack:=true,
+isBlocked:=false</label>
 			<nail x="59" y="-68"/>
 			<nail x="59" y="-178"/>
 		</transition>
 	</template>
 	<template>
-		<name>DistributionBelt1</name>
-		<parameter>chan &amp;Black, chan &amp;Yellow</parameter>
-		<location id="id1" x="305" y="-424">
-			<name x="262" y="-458">DestinationB</name>
-			<label kind="comments" x="220" y="-475">Destination of Yellow bags</label>
+		<name>BroadcastC</name>
+		<location id="id1" x="0" y="0">
 		</location>
-		<location id="id2" x="-221" y="-425">
-			<name x="-263" y="-459">arrivedCheckin</name>
-		</location>
-		<location id="id3" x="-221" y="-128">
-			<name x="-255" y="-110">SectionC</name>
-		</location>
-		<location id="id4" x="-34" y="-127">
-			<name x="-59" y="-110">SectionF</name>
-		</location>
-		<location id="id5" x="-221" y="-323">
-			<name x="-204" y="-331">SectionA</name>
-		</location>
-		<location id="id6" x="127" y="-127">
-			<name x="102" y="-110">SectionD</name>
-		</location>
-		<location id="id7" x="-417" y="-425">
-			<name x="-459" y="-459">DestinationA</name>
-			<label kind="comments" x="-502" y="-476">Destination of Black bags</label>
-		</location>
-		<location id="id8" x="305" y="-127">
-			<name x="279" y="-110">SectionE2</name>
-		</location>
-		<location id="id9" x="-417" y="-128">
-			<name x="-459" y="-111">SectionE1</name>
-		</location>
-		<location id="id10" x="-221" y="-230">
-			<name x="-204" y="-238">SectionB</name>
-		</location>
-		<init ref="id2"/>
+		<init ref="id1"/>
 		<transition>
 			<source ref="id1"/>
-			<target ref="id2"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="136" y="-8">Broadcast!</label>
+			<nail x="119" y="84"/>
+			<nail x="119" y="-85"/>
 		</transition>
+	</template>
+	<template>
+		<name>MotorC</name>
+		<parameter>chan &amp;Broadcast</parameter>
+		<location id="id2" x="76" y="0">
+			<name x="93" y="-8">Backward</name>
+		</location>
+		<location id="id3" x="-127" y="0">
+			<name x="-195" y="-17">Forward</name>
+		</location>
+		<init ref="id3"/>
 		<transition>
 			<source ref="id3"/>
-			<target ref="id4"/>
-			<label kind="synchronisation" x="-153" y="-153">Yellow?</label>
+			<target ref="id3"/>
+			<label kind="guard" x="-340" y="-17">isBlack==true</label>
+			<label kind="synchronisation" x="-331" y="8">Broadcast?</label>
+			<label kind="assignment" x="-357" y="25">isForward:=true</label>
+			<nail x="-178" y="76"/>
+			<nail x="-246" y="76"/>
+			<nail x="-238" y="-85"/>
+			<nail x="-170" y="-85"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
-			<target ref="id5"/>
+			<target ref="id2"/>
+			<label kind="guard" x="221" y="-17">isBlack==false</label>
+			<label kind="synchronisation" x="221" y="0">Broadcast?</label>
+			<label kind="assignment" x="221" y="17">isForward:=false</label>
+			<nail x="144" y="-76"/>
+			<nail x="221" y="-76"/>
+			<nail x="212" y="76"/>
+			<nail x="153" y="76"/>
 		</transition>
 		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-68" y="102">isBlack</label>
+			<label kind="synchronisation" x="-68" y="68">Broadcast?</label>
+			<label kind="assignment" x="-68" y="85">isForward:=true</label>
+			<nail x="24" y="68"/>
+			<nail x="-86" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-59" y="-127">!isBlack</label>
+			<label kind="synchronisation" x="-59" y="-93">Broadcast?</label>
+			<label kind="assignment" x="-59" y="-110">isForward:=false</label>
+			<nail x="-76" y="-68"/>
+			<nail x="34" y="-68"/>
+		</transition>
+	</template>
+	<template>
+		<name>DistributionBelt1</name>
+		<location id="id4" x="-221" y="-425">
+		</location>
+		<location id="id5" x="306" y="-510">
+			<name x="263" y="-544">DestinationB</name>
+			<label kind="comments" x="221" y="-561">Destination of Yellow bags</label>
+		</location>
+		<location id="id6" x="-220" y="-511">
+			<name x="-262" y="-545">arrivedCheckin</name>
+		</location>
+		<location id="id7" x="-221" y="-128">
+			<name x="-255" y="-110">SectionC</name>
+		</location>
+		<location id="id8" x="-34" y="-127">
+			<name x="-59" y="-110">SectionF</name>
+		</location>
+		<location id="id9" x="-221" y="-323">
+			<name x="-204" y="-331">SectionA</name>
+		</location>
+		<location id="id10" x="127" y="-127">
+			<name x="102" y="-110">SectionD</name>
+		</location>
+		<location id="id11" x="-416" y="-511">
+			<name x="-458" y="-545">DestinationA</name>
+			<label kind="comments" x="-501" y="-562">Destination of Black bags</label>
+		</location>
+		<location id="id12" x="305" y="-127">
+			<name x="279" y="-110">SectionE2</name>
+		</location>
+		<location id="id13" x="-417" y="-128">
+			<name x="-459" y="-111">SectionE1</name>
+		</location>
+		<location id="id14" x="-221" y="-230">
+			<name x="-204" y="-238">SectionB</name>
+		</location>
+		<init ref="id6"/>
+		<transition>
 			<source ref="id4"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-204" y="-391">!isBlocked</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="-204" y="-467">isBlocked:=true</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
 			<target ref="id6"/>
 		</transition>
 		<transition>
 			<source ref="id7"/>
-			<target ref="id2"/>
-			<nail x="-408" y="-425"/>
-		</transition>
-		<transition>
-			<source ref="id6"/>
 			<target ref="id8"/>
-		</transition>
-		<transition>
-			<source ref="id9"/>
-			<target ref="id7"/>
-		</transition>
-		<transition>
-			<source ref="id3"/>
-			<target ref="id9"/>
-			<label kind="synchronisation" x="-340" y="-153">Black?</label>
-		</transition>
-		<transition>
-			<source ref="id10"/>
-			<target ref="id3"/>
-		</transition>
-		<transition>
-			<source ref="id5"/>
-			<target ref="id10"/>
+			<label kind="guard" x="-161" y="-153">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id8"/>
-			<target ref="id1"/>
+			<target ref="id10"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id6"/>
+			<nail x="-407" y="-511"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id12"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id11"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id13"/>
+			<label kind="guard" x="-357" y="-153">isForward</label>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id7"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-204" y="-289">Broadcast!</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id5"/>
 		</transition>
 	</template>
 	<template>
 		<name>DistributionBelt2</name>
-		<parameter>chan &amp;Black, chan &amp;Yellow</parameter>
-		<location id="id11" x="305" y="-424">
-			<name x="262" y="-458">DestinationA</name>
-			<label kind="comments" x="220" y="-475">Destination of Black bags</label>
+		<location id="id15" x="-221" y="-425">
 		</location>
-		<location id="id12" x="-221" y="-425">
-			<name x="-263" y="-459">arrivedCheckin</name>
+		<location id="id16" x="306" y="-518">
+			<name x="263" y="-552">DestinationA</name>
+			<label kind="comments" x="221" y="-569">Destination of Black bags</label>
 		</location>
-		<location id="id13" x="-221" y="-128">
-			<name x="-255" y="-110">SectionC</name>
+		<location id="id17" x="-220" y="-519">
+			<name x="-262" y="-553">arrivedCheckin</name>
 		</location>
-		<location id="id14" x="-34" y="-127">
+		<location id="id18" x="-221" y="-127">
+			<name x="-255" y="-109">SectionC</name>
+		</location>
+		<location id="id19" x="-34" y="-127">
 			<name x="-59" y="-110">SectionF</name>
 		</location>
-		<location id="id15" x="-221" y="-323">
+		<location id="id20" x="-221" y="-323">
 			<name x="-204" y="-331">SectionA</name>
 		</location>
-		<location id="id16" x="127" y="-127">
+		<location id="id21" x="127" y="-127">
 			<name x="102" y="-110">SectionD</name>
 		</location>
-		<location id="id17" x="-417" y="-425">
-			<name x="-459" y="-459">DestinationB</name>
-			<label kind="comments" x="-502" y="-476">Destination of Yellow bags</label>
+		<location id="id22" x="-416" y="-519">
+			<name x="-458" y="-553">DestinationB</name>
+			<label kind="comments" x="-501" y="-570">Destination of Yellow bags</label>
 		</location>
-		<location id="id18" x="305" y="-127">
+		<location id="id23" x="305" y="-127">
 			<name x="279" y="-110">SectionE2</name>
 		</location>
-		<location id="id19" x="-417" y="-128">
+		<location id="id24" x="-417" y="-128">
 			<name x="-459" y="-111">SectionE1</name>
 		</location>
-		<location id="id20" x="-221" y="-230">
+		<location id="id25" x="-221" y="-230">
 			<name x="-204" y="-238">SectionB</name>
 		</location>
-		<init ref="id12"/>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id12"/>
-		</transition>
-		<transition>
-			<source ref="id13"/>
-			<target ref="id14"/>
-			<label kind="synchronisation" x="-144" y="-153">Black?</label>
-		</transition>
-		<transition>
-			<source ref="id12"/>
-			<target ref="id15"/>
-		</transition>
-		<transition>
-			<source ref="id14"/>
-			<target ref="id16"/>
-		</transition>
-		<transition>
-			<source ref="id17"/>
-			<target ref="id12"/>
-			<nail x="-408" y="-425"/>
-		</transition>
-		<transition>
-			<source ref="id16"/>
-			<target ref="id18"/>
-		</transition>
-		<transition>
-			<source ref="id19"/>
-			<target ref="id17"/>
-		</transition>
-		<transition>
-			<source ref="id13"/>
-			<target ref="id19"/>
-			<label kind="synchronisation" x="-340" y="-153">Yellow?</label>
-		</transition>
-		<transition>
-			<source ref="id20"/>
-			<target ref="id13"/>
-		</transition>
+		<init ref="id17"/>
 		<transition>
 			<source ref="id15"/>
 			<target ref="id20"/>
+			<label kind="guard" x="-221" y="-408">!isBlocked</label>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id15"/>
+			<label kind="assignment" x="-212" y="-476">isBlocked:=true</label>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id17"/>
 		</transition>
 		<transition>
 			<source ref="id18"/>
-			<target ref="id11"/>
+			<target ref="id19"/>
+			<label kind="guard" x="-161" y="-153">isForward</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id21"/>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id17"/>
+			<nail x="-407" y="-519"/>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id23"/>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id22"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id24"/>
+			<label kind="guard" x="-357" y="-153">!isForward</label>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id18"/>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id25"/>
+			<label kind="synchronisation" x="-204" y="-289">Broadcast!</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id16"/>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
-Bag1 = DistributionBelt1(Black, Yellow);
-Bag2 = DistributionBelt2(Black, Yellow);
+Bag1 = DistributionBelt1();
+Bag2 = DistributionBelt2();
+Motor = MotorC(Broadcast);
 
 // List one or more processes to be composed into a system.
-system Bag1, Bag2, Sensor;
-    </system>
+system Bag1, Bag2, Motor, Sensor, BroadcastC;   </system>
 	<queries>
 	</queries>
 </nta>
