@@ -16,6 +16,7 @@ bool isBlack, isForward, isBlocked;</declaration>
 			<label kind="synchronisation" x="-272" y="-153">Broadcast?</label>
 			<label kind="assignment" x="-272" y="-136">isBlack:=false, 
 isBlocked:=false</label>
+			<label kind="comments" x="-272" y="-93">Bag is Yellow</label>
 			<nail x="-161" y="-68"/>
 			<nail x="-161" y="-178"/>
 		</transition>
@@ -26,6 +27,7 @@ isBlocked:=false</label>
 			<label kind="synchronisation" x="68" y="-153">Broadcast?</label>
 			<label kind="assignment" x="68" y="-136">isBlack:=true,
 isBlocked:=false</label>
+			<label kind="comments" x="76" y="-93">Bag is Black</label>
 			<nail x="59" y="-68"/>
 			<nail x="59" y="-178"/>
 		</transition>
@@ -56,81 +58,85 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id3"/>
-			<label kind="guard" x="-340" y="-17">isBlack==true</label>
-			<label kind="synchronisation" x="-331" y="8">Broadcast?</label>
-			<label kind="assignment" x="-357" y="25">isForward:=true</label>
+			<label kind="guard" x="-340" y="-25">isBlack==true</label>
+			<label kind="synchronisation" x="-331" y="-8">Broadcast?</label>
+			<label kind="assignment" x="-357" y="9">isForward:=true</label>
 			<nail x="-178" y="76"/>
-			<nail x="-246" y="76"/>
+			<nail x="-238" y="76"/>
 			<nail x="-238" y="-85"/>
 			<nail x="-170" y="-85"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id2"/>
-			<label kind="guard" x="221" y="-17">isBlack==false</label>
-			<label kind="synchronisation" x="221" y="0">Broadcast?</label>
-			<label kind="assignment" x="221" y="17">isForward:=false</label>
-			<nail x="144" y="-76"/>
-			<nail x="221" y="-76"/>
-			<nail x="212" y="76"/>
-			<nail x="153" y="76"/>
+			<label kind="guard" x="204" y="-25">isBlack==false</label>
+			<label kind="synchronisation" x="204" y="-8">Broadcast?</label>
+			<label kind="assignment" x="204" y="9">isForward:=false</label>
+			<nail x="119" y="-85"/>
+			<nail x="195" y="-85"/>
+			<nail x="195" y="76"/>
+			<nail x="127" y="76"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id3"/>
-			<label kind="guard" x="-68" y="102">isBlack</label>
-			<label kind="synchronisation" x="-68" y="68">Broadcast?</label>
-			<label kind="assignment" x="-68" y="85">isForward:=true</label>
-			<nail x="24" y="68"/>
-			<nail x="-86" y="68"/>
+			<label kind="guard" x="-58" y="110">isBlack</label>
+			<label kind="synchronisation" x="-58" y="76">Broadcast?</label>
+			<label kind="assignment" x="-58" y="93">isForward:=true</label>
+			<nail x="34" y="76"/>
+			<nail x="-76" y="76"/>
 		</transition>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id2"/>
-			<label kind="guard" x="-59" y="-127">!isBlack</label>
-			<label kind="synchronisation" x="-59" y="-93">Broadcast?</label>
-			<label kind="assignment" x="-59" y="-110">isForward:=false</label>
-			<nail x="-76" y="-68"/>
-			<nail x="34" y="-68"/>
+			<label kind="guard" x="-59" y="-144">!isBlack</label>
+			<label kind="synchronisation" x="-59" y="-110">Broadcast?</label>
+			<label kind="assignment" x="-59" y="-127">isForward:=false</label>
+			<nail x="-76" y="-85"/>
+			<nail x="34" y="-85"/>
 		</transition>
 	</template>
 	<template>
 		<name>DistributionBelt1</name>
-		<location id="id4" x="-221" y="-425">
+		<location id="id4" x="-221" y="-433">
 		</location>
-		<location id="id5" x="306" y="-510">
-			<name x="263" y="-544">DestinationB</name>
-			<label kind="comments" x="221" y="-561">Destination of Yellow bags</label>
+		<location id="id5" x="263" y="-535">
+			<name x="220" y="-569">DestinationB</name>
+			<label kind="comments" x="178" y="-586">Destination of Yellow bags</label>
 		</location>
-		<location id="id6" x="-220" y="-511">
-			<name x="-262" y="-545">arrivedCheckin</name>
+		<location id="id6" x="-221" y="-535">
+			<name x="-263" y="-569">arrivedCheckin</name>
 		</location>
-		<location id="id7" x="-221" y="-128">
-			<name x="-255" y="-110">SectionC</name>
+		<location id="id7" x="-221" y="-127">
+			<name x="-255" y="-109">SectionC</name>
 		</location>
-		<location id="id8" x="-34" y="-127">
-			<name x="-59" y="-110">SectionF</name>
+		<location id="id8" x="-59" y="-127">
+			<name x="-84" y="-110">SectionF</name>
 		</location>
-		<location id="id9" x="-221" y="-323">
-			<name x="-204" y="-331">SectionA</name>
+		<location id="id9" x="-221" y="-331">
+			<name x="-204" y="-339">SectionA</name>
 		</location>
-		<location id="id10" x="127" y="-127">
-			<name x="102" y="-110">SectionD</name>
+		<location id="id10" x="102" y="-127">
+			<name x="77" y="-110">SectionD</name>
 		</location>
-		<location id="id11" x="-416" y="-511">
-			<name x="-458" y="-545">DestinationA</name>
-			<label kind="comments" x="-501" y="-562">Destination of Black bags</label>
+		<location id="id11" x="-382" y="-535">
+			<name x="-424" y="-569">DestinationA</name>
+			<label kind="comments" x="-467" y="-586">Destination of Black bags</label>
 		</location>
-		<location id="id12" x="305" y="-127">
-			<name x="279" y="-110">SectionE2</name>
+		<location id="id12" x="262" y="-127">
+			<name x="236" y="-110">SectionE2</name>
 		</location>
-		<location id="id13" x="-417" y="-128">
-			<name x="-459" y="-111">SectionE1</name>
+		<location id="id13" x="-382" y="-127">
+			<name x="-424" y="-110">SectionE1</name>
 		</location>
 		<location id="id14" x="-221" y="-230">
 			<name x="-204" y="-238">SectionB</name>
 		</location>
 		<init ref="id6"/>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id6"/>
+		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id9"/>
@@ -139,7 +145,7 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id6"/>
 			<target ref="id4"/>
-			<label kind="assignment" x="-204" y="-467">isBlocked:=true</label>
+			<label kind="assignment" x="-204" y="-493">isBlocked:=true</label>
 		</transition>
 		<transition>
 			<source ref="id5"/>
@@ -148,16 +154,11 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id8"/>
-			<label kind="guard" x="-161" y="-153">!isForward</label>
+			<label kind="guard" x="-178" y="-153">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id10"/>
-		</transition>
-		<transition>
-			<source ref="id11"/>
-			<target ref="id6"/>
-			<nail x="-407" y="-511"/>
 		</transition>
 		<transition>
 			<source ref="id10"/>
@@ -170,7 +171,7 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id13"/>
-			<label kind="guard" x="-357" y="-153">isForward</label>
+			<label kind="guard" x="-331" y="-153">isForward</label>
 		</transition>
 		<transition>
 			<source ref="id14"/>
@@ -188,50 +189,54 @@ isBlocked:=false</label>
 	</template>
 	<template>
 		<name>DistributionBelt2</name>
-		<location id="id15" x="-221" y="-425">
+		<location id="id15" x="17" y="-450">
 		</location>
-		<location id="id16" x="306" y="-518">
-			<name x="263" y="-552">DestinationA</name>
-			<label kind="comments" x="221" y="-569">Destination of Black bags</label>
+		<location id="id16" x="-467" y="-552">
+			<name x="-510" y="-586">DestinationA</name>
+			<label kind="comments" x="-552" y="-603">Destination of Black bags</label>
 		</location>
-		<location id="id17" x="-220" y="-519">
-			<name x="-262" y="-553">arrivedCheckin</name>
+		<location id="id17" x="17" y="-552">
+			<name x="-25" y="-586">arrivedCheckin</name>
 		</location>
-		<location id="id18" x="-221" y="-127">
-			<name x="-255" y="-109">SectionC</name>
+		<location id="id18" x="17" y="-144">
+			<name x="-17" y="-126">SectionC</name>
 		</location>
-		<location id="id19" x="-34" y="-127">
-			<name x="-59" y="-110">SectionF</name>
+		<location id="id19" x="-144" y="-144">
+			<name x="-169" y="-127">SectionF</name>
 		</location>
-		<location id="id20" x="-221" y="-323">
-			<name x="-204" y="-331">SectionA</name>
+		<location id="id20" x="17" y="-348">
+			<name x="34" y="-356">SectionA</name>
 		</location>
-		<location id="id21" x="127" y="-127">
-			<name x="102" y="-110">SectionD</name>
+		<location id="id21" x="-306" y="-144">
+			<name x="-331" y="-127">SectionD</name>
 		</location>
-		<location id="id22" x="-416" y="-519">
-			<name x="-458" y="-553">DestinationB</name>
-			<label kind="comments" x="-501" y="-570">Destination of Yellow bags</label>
+		<location id="id22" x="178" y="-552">
+			<name x="136" y="-586">DestinationB</name>
+			<label kind="comments" x="93" y="-603">Destination of Yellow bags</label>
 		</location>
-		<location id="id23" x="305" y="-127">
-			<name x="279" y="-110">SectionE2</name>
+		<location id="id23" x="-467" y="-144">
+			<name x="-493" y="-127">SectionE2</name>
 		</location>
-		<location id="id24" x="-417" y="-128">
-			<name x="-459" y="-111">SectionE1</name>
+		<location id="id24" x="178" y="-144">
+			<name x="136" y="-127">SectionE1</name>
 		</location>
-		<location id="id25" x="-221" y="-230">
-			<name x="-204" y="-238">SectionB</name>
+		<location id="id25" x="17" y="-247">
+			<name x="34" y="-255">SectionB</name>
 		</location>
 		<init ref="id17"/>
 		<transition>
+			<source ref="id22"/>
+			<target ref="id17"/>
+		</transition>
+		<transition>
 			<source ref="id15"/>
 			<target ref="id20"/>
-			<label kind="guard" x="-221" y="-408">!isBlocked</label>
+			<label kind="guard" x="34" y="-416">!isBlocked</label>
 		</transition>
 		<transition>
 			<source ref="id17"/>
 			<target ref="id15"/>
-			<label kind="assignment" x="-212" y="-476">isBlocked:=true</label>
+			<label kind="assignment" x="34" y="-510">isBlocked:=true</label>
 		</transition>
 		<transition>
 			<source ref="id16"/>
@@ -240,16 +245,11 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id18"/>
 			<target ref="id19"/>
-			<label kind="guard" x="-161" y="-153">isForward</label>
+			<label kind="guard" x="-85" y="-170">isForward</label>
 		</transition>
 		<transition>
 			<source ref="id19"/>
 			<target ref="id21"/>
-		</transition>
-		<transition>
-			<source ref="id22"/>
-			<target ref="id17"/>
-			<nail x="-407" y="-519"/>
 		</transition>
 		<transition>
 			<source ref="id21"/>
@@ -262,7 +262,7 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id18"/>
 			<target ref="id24"/>
-			<label kind="guard" x="-357" y="-153">!isForward</label>
+			<label kind="guard" x="59" y="-170">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id25"/>
@@ -271,7 +271,7 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id25"/>
-			<label kind="synchronisation" x="-204" y="-289">Broadcast!</label>
+			<label kind="synchronisation" x="34" y="-306">Broadcast!</label>
 		</transition>
 		<transition>
 			<source ref="id23"/>
