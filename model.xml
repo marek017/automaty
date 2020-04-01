@@ -2,21 +2,23 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-chan Broadcast, BroadcastM, Reverse, SensorRead;
+chan Broadcast, BroadcastM, Reverse, SensorRead, ThrowBag;
 bool isBlack;
 bool isForward=true;
 bool isBlocked;
 bool fakeStop=false;
-bool motorStop;</declaration>
+bool motorStop;
+bool newBag=false;
+clock done, now;</declaration>
 	<template>
 		<name>Sensor</name>
-		<location id="id0" x="272" y="34">
+		<location id="id0" x="187" y="-25">
 		</location>
-		<location id="id1" x="272" y="-255">
+		<location id="id1" x="187" y="-204">
 		</location>
-		<location id="id2" x="-374" y="34">
+		<location id="id2" x="-289" y="-25">
 		</location>
-		<location id="id3" x="-374" y="-255">
+		<location id="id3" x="-289" y="-204">
 		</location>
 		<location id="id4" x="-51" y="-119">
 		</location>
@@ -24,42 +26,42 @@ bool motorStop;</declaration>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id4"/>
-			<label kind="synchronisation" x="102" y="-297">SensorRead!</label>
-			<label kind="assignment" x="93" y="-280">isBlocked:=false</label>
-			<nail x="17" y="-255"/>
+			<label kind="synchronisation" x="51" y="-246">SensorRead!</label>
+			<label kind="assignment" x="42" y="-229">isBlocked:=false</label>
+			<nail x="8" y="-204"/>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id1"/>
-			<label kind="assignment" x="289" y="-119">isBlack:=true</label>
-			<label kind="comments" x="306" y="-144">BLACK</label>
+			<label kind="assignment" x="204" y="-119">isBlack:=true</label>
+			<label kind="comments" x="221" y="-144">BLACK</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id0"/>
-			<label kind="guard" x="102" y="34">isBlocked</label>
-			<label kind="synchronisation" x="93" y="51">Broadcast?</label>
-			<nail x="0" y="34"/>
+			<label kind="guard" x="59" y="-68">isBlocked</label>
+			<label kind="synchronisation" x="51" y="-51">Broadcast?</label>
+			<nail x="0" y="-25"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id4"/>
-			<label kind="synchronisation" x="-289" y="34">SensorRead!</label>
-			<label kind="assignment" x="-297" y="51">isBlocked:=false</label>
-			<nail x="-110" y="34"/>
+			<label kind="synchronisation" x="-238" y="-68">SensorRead!</label>
+			<label kind="assignment" x="-246" y="-51">isBlocked:=false</label>
+			<nail x="-110" y="-25"/>
 		</transition>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id2"/>
-			<label kind="assignment" x="-484" y="-119">isBlack:=false</label>
-			<label kind="comments" x="-467" y="-144">YELLOW</label>
+			<label kind="assignment" x="-399" y="-119">isBlack:=false</label>
+			<label kind="comments" x="-382" y="-144">YELLOW</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id3"/>
-			<label kind="guard" x="-280" y="-297">isBlocked</label>
-			<label kind="synchronisation" x="-280" y="-280">Broadcast?</label>
-			<nail x="-102" y="-255"/>
+			<label kind="guard" x="-238" y="-246">isBlocked</label>
+			<label kind="synchronisation" x="-238" y="-229">Broadcast?</label>
+			<nail x="-102" y="-204"/>
 		</transition>
 	</template>
 	<template>
@@ -104,6 +106,7 @@ bool motorStop;</declaration>
 	</template>
 	<template>
 		<name>MotorAB</name>
+		<declaration>clock x;</declaration>
 		<location id="id8" x="17" y="8">
 		</location>
 		<location id="id9" x="-221" y="8">
@@ -145,9 +148,9 @@ bool motorStop;</declaration>
 		</transition>
 	</template>
 	<template>
-		<name>DistributionBelt1</name>
+		<name>DistributionBelt</name>
 		<location id="id11" x="-221" y="-433">
-			<name x="-187" y="-442">Initial1</name>
+			<name x="-204" y="-442">Initial1</name>
 		</location>
 		<location id="id12" x="314" y="-569">
 			<name x="271" y="-603">DestinationB</name>
@@ -182,7 +185,7 @@ bool motorStop;</declaration>
 			<name x="-204" y="-238">SectionB1</name>
 		</location>
 		<location id="id22" x="102" y="-433">
-			<name x="127" y="-441">Initial2</name>
+			<name x="119" y="-442">Initial2</name>
 		</location>
 		<location id="id23" x="102" y="-331">
 			<name x="119" y="-339">SectionA2</name>
@@ -211,6 +214,7 @@ bool motorStop;</declaration>
 		<transition>
 			<source ref="id13"/>
 			<target ref="id22"/>
+			<label kind="guard" x="51" y="-527">fakeStop &amp;&amp; newBag</label>
 			<label kind="assignment" x="51" y="-510">isBlocked:=true</label>
 		</transition>
 		<transition>
@@ -225,6 +229,7 @@ bool motorStop;</declaration>
 		<transition>
 			<source ref="id13"/>
 			<target ref="id11"/>
+			<label kind="guard" x="-229" y="-527">newBag</label>
 			<label kind="assignment" x="-255" y="-510">isBlocked:=true</label>
 		</transition>
 		<transition>
@@ -280,12 +285,38 @@ bool motorStop;</declaration>
 			<label kind="synchronisation" x="119" y="-289">BroadcastM!</label>
 		</transition>
 	</template>
+	<template>
+		<name>BaggageHandler</name>
+		<declaration>clock checkInDelay;</declaration>
+		<location id="id25" x="25" y="8">
+			<label kind="invariant" x="42" y="0">2&lt;=checkInDelay</label>
+			<label kind="comments" x="42" y="-42">need 1.4 seconds to be 
+delayed for next bag</label>
+		</location>
+		<location id="id26" x="-170" y="8">
+			<name x="-212" y="8">Idle</name>
+			<urgent/>
+		</location>
+		<init ref="id26"/>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id25"/>
+			<label kind="assignment" x="-127" y="-136">checkInDelay:=0,
+newBag:=true</label>
+			<nail x="-119" y="-93"/>
+			<nail x="-25" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id26"/>
+		</transition>
+	</template>
 	<system>// Place template instantiations here.
-Bag = DistributionBelt1();
+Bag = DistributionBelt();
 MotorC = MotorDistribution(Reverse);
 
 // List one or more processes to be composed into a system.
-system Bag, MotorC, MotorAB, Sensor, BroadcastC; </system>
+system Bag, MotorC, MotorAB, Sensor, BroadcastC, BaggageHandler; </system>
 	<queries>
 	</queries>
 </nta>
