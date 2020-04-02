@@ -12,70 +12,56 @@ bool newBag=false;
 clock done;</declaration>
 	<template>
 		<name>Sensor</name>
-		<location id="id0" x="187" y="-25">
-			<urgent/>
+		<location id="id0" x="187" y="-119">
+			<committed/>
 		</location>
-		<location id="id1" x="187" y="-204">
-			<urgent/>
+		<location id="id1" x="-289" y="-119">
+			<committed/>
 		</location>
-		<location id="id2" x="-289" y="-25">
-			<urgent/>
+		<location id="id2" x="-51" y="-119">
 		</location>
-		<location id="id3" x="-289" y="-204">
-			<urgent/>
-		</location>
-		<location id="id4" x="-51" y="-119">
-		</location>
-		<init ref="id4"/>
-		<transition>
-			<source ref="id1"/>
-			<target ref="id4"/>
-			<label kind="synchronisation" x="51" y="-246">SensorRead!</label>
-			<label kind="assignment" x="42" y="-229">isBlocked:=false</label>
-			<nail x="8" y="-204"/>
-		</transition>
+		<init ref="id2"/>
 		<transition>
 			<source ref="id0"/>
-			<target ref="id1"/>
-			<label kind="assignment" x="204" y="-119">isBlack:=true</label>
-			<label kind="comments" x="221" y="-144">BLACK</label>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="68" y="-238">SensorRead!</label>
+			<label kind="assignment" x="68" y="-221">isBlack:=true,
+isBlocked:=false</label>
+			<label kind="comments" x="85" y="-263">Black</label>
+			<nail x="0" y="-204"/>
 		</transition>
 		<transition>
-			<source ref="id4"/>
-			<target ref="id0"/>
-			<label kind="synchronisation" x="51" y="-68">Broadcast?</label>
-			<label kind="assignment" x="34" y="-51">isBlocked:=true</label>
-			<nail x="0" y="-25"/>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-255" y="-68">SensorRead!</label>
+			<label kind="assignment" x="-255" y="-51">isBlack:=false,
+isBlocked:=false</label>
+			<label kind="comments" x="-238" y="-8">Yellow</label>
+			<nail x="-110" y="-42"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
-			<target ref="id4"/>
-			<label kind="synchronisation" x="-238" y="-68">SensorRead!</label>
-			<label kind="assignment" x="-246" y="-51">isBlocked:=false</label>
-			<nail x="-110" y="-25"/>
+			<target ref="id0"/>
+			<label kind="guard" x="68" y="-51">isBlocked</label>
+			<label kind="synchronisation" x="68" y="-68">Broadcast?</label>
+			<nail x="8" y="-42"/>
 		</transition>
 		<transition>
-			<source ref="id3"/>
-			<target ref="id2"/>
-			<label kind="assignment" x="-399" y="-119">isBlack:=false</label>
-			<label kind="comments" x="-382" y="-144">YELLOW</label>
-		</transition>
-		<transition>
-			<source ref="id4"/>
-			<target ref="id3"/>
-			<label kind="synchronisation" x="-238" y="-246">Broadcast?</label>
-			<label kind="assignment" x="-246" y="-229">isBlocked:=true</label>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-238" y="-195">isBlocked</label>
+			<label kind="synchronisation" x="-246" y="-212">Broadcast?</label>
 			<nail x="-102" y="-204"/>
 		</transition>
 	</template>
 	<template>
 		<name>BroadcastC</name>
-		<location id="id5" x="0" y="0">
+		<location id="id3" x="0" y="0">
 		</location>
-		<init ref="id5"/>
+		<init ref="id3"/>
 		<transition>
-			<source ref="id5"/>
-			<target ref="id5"/>
+			<source ref="id3"/>
+			<target ref="id3"/>
 			<label kind="synchronisation" x="136" y="-8">Broadcast!</label>
 			<nail x="119" y="84"/>
 			<nail x="119" y="-85"/>
@@ -84,24 +70,24 @@ clock done;</declaration>
 	<template>
 		<name>MotorDistribution</name>
 		<parameter>chan &amp;Reverse</parameter>
-		<location id="id6" x="76" y="0">
+		<location id="id4" x="76" y="0">
 			<name x="93" y="-8">Backward</name>
 		</location>
-		<location id="id7" x="-127" y="0">
+		<location id="id5" x="-127" y="0">
 			<name x="-195" y="-17">Forward</name>
 		</location>
-		<init ref="id7"/>
+		<init ref="id5"/>
 		<transition>
-			<source ref="id6"/>
-			<target ref="id7"/>
+			<source ref="id4"/>
+			<target ref="id5"/>
 			<label kind="synchronisation" x="-51" y="76">Reverse?</label>
 			<label kind="assignment" x="-68" y="93">isForward:=true</label>
 			<nail x="34" y="76"/>
 			<nail x="-76" y="76"/>
 		</transition>
 		<transition>
-			<source ref="id7"/>
-			<target ref="id6"/>
+			<source ref="id5"/>
+			<target ref="id4"/>
 			<label kind="synchronisation" x="-51" y="-110">Reverse?</label>
 			<label kind="assignment" x="-76" y="-127">isForward:=false</label>
 			<nail x="-76" y="-85"/>
@@ -111,18 +97,18 @@ clock done;</declaration>
 	<template>
 		<name>MotorAB</name>
 		<declaration>clock x;</declaration>
-		<location id="id8" x="17" y="8">
+		<location id="id6" x="17" y="8">
 		</location>
-		<location id="id9" x="-221" y="8">
+		<location id="id7" x="-221" y="8">
 			<name x="-280" y="16">Forward</name>
 		</location>
-		<location id="id10" x="255" y="8">
+		<location id="id8" x="255" y="8">
 			<name x="213" y="16">Stop</name>
 		</location>
-		<init ref="id9"/>
+		<init ref="id7"/>
 		<transition>
-			<source ref="id8"/>
-			<target ref="id9"/>
+			<source ref="id6"/>
+			<target ref="id7"/>
 			<label kind="guard" x="-178" y="59">(isForward &amp;&amp; isBlack) ||
 (!isForward &amp;&amp; !isBlack)</label>
 			<label kind="synchronisation" x="-136" y="34">BroadcastM?</label>
@@ -130,21 +116,21 @@ clock done;</declaration>
 			<nail x="-187" y="102"/>
 		</transition>
 		<transition>
-			<source ref="id8"/>
-			<target ref="id10"/>
+			<source ref="id6"/>
+			<target ref="id8"/>
 			<label kind="guard" x="59" y="-34">(isForward &amp;&amp; !isBlack) || 
 (!isForward &amp;&amp; isBlack)</label>
 			<label kind="synchronisation" x="93" y="-68">BroadcastM?</label>
 			<label kind="assignment" x="85" y="-51">motorStop:=true</label>
 		</transition>
 		<transition>
-			<source ref="id9"/>
-			<target ref="id8"/>
+			<source ref="id7"/>
+			<target ref="id6"/>
 			<label kind="synchronisation" x="-144" y="-17">SensorRead?</label>
 		</transition>
 		<transition>
-			<source ref="id10"/>
-			<target ref="id9"/>
+			<source ref="id8"/>
+			<target ref="id7"/>
 			<label kind="synchronisation" x="-17" y="-178">Reverse!</label>
 			<label kind="assignment" x="-42" y="-161">motorStop:=false</label>
 			<nail x="212" y="-136"/>
@@ -153,173 +139,186 @@ clock done;</declaration>
 	</template>
 	<template>
 		<name>DistributionBelt</name>
-		<location id="id11" x="-221" y="-748">
-			<name x="-204" y="-756">SectionA1_b</name>
-			<label kind="invariant" x="-195" y="-739">!isBlocked &amp;&amp; 
-done&lt;=done+20</label>
+		<declaration>clock bagMovement;</declaration>
+		<location id="id9" x="-221" y="-586">
+			<name x="-204" y="-594">SetionB1_stop_position</name>
 		</location>
-		<location id="id12" x="-221" y="-1011">
-			<name x="-204" y="-1020">Initial1</name>
+		<location id="id10" x="-221" y="-875">
+			<name x="-204" y="-883">SectionA1_scanner_position</name>
 		</location>
-		<location id="id13" x="314" y="-1147">
+		<location id="id11" x="314" y="-1147">
 			<name x="271" y="-1181">DestinationB</name>
 			<label kind="comments" x="229" y="-1198">Destination of Yellow bags</label>
 		</location>
-		<location id="id14" x="-51" y="-1147">
+		<location id="id12" x="-51" y="-1147">
 			<name x="-102" y="-1181">arrivedCheckin</name>
 		</location>
-		<location id="id15" x="-221" y="-127">
+		<location id="id13" x="-221" y="-127">
 			<name x="-255" y="-102">SectionC1</name>
 		</location>
-		<location id="id16" x="-59" y="-127">
+		<location id="id14" x="-59" y="-127">
 			<name x="-93" y="-102">SectionF1</name>
 		</location>
-		<location id="id17" x="-221" y="-884">
-			<name x="-204" y="-901">SectionA1_a</name>
-			<label kind="invariant" x="-204" y="-884">done&gt;=done+8</label>
+		<location id="id15" x="-221" y="-1011">
+			<name x="-204" y="-1020">SectionA1_a</name>
 		</location>
-		<location id="id18" x="102" y="-127">
+		<location id="id16" x="102" y="-127">
 			<name x="76" y="-102">SectionD1</name>
 		</location>
-		<location id="id19" x="-382" y="-1147">
+		<location id="id17" x="-382" y="-1147">
 			<name x="-424" y="-1181">DestinationA</name>
 			<label kind="comments" x="-467" y="-1198">Destination of Black bags</label>
 		</location>
-		<location id="id20" x="314" y="-127">
+		<location id="id18" x="314" y="-127">
 			<name x="288" y="-110">SectionE2</name>
 		</location>
-		<location id="id21" x="-382" y="-127">
+		<location id="id19" x="-382" y="-127">
 			<name x="-424" y="-110">SectionE1</name>
 		</location>
-		<location id="id22" x="102" y="-1011">
+		<location id="id20" x="102" y="-1011">
 			<name x="119" y="-1020">Initial2</name>
 		</location>
-		<location id="id23" x="102" y="-884">
-			<name x="119" y="-892">SectionA2</name>
+		<location id="id21" x="102" y="-875">
+			<name x="119" y="-883">SectionA2</name>
 		</location>
-		<location id="id24" x="102" y="-230">
+		<location id="id22" x="102" y="-230">
 			<name x="119" y="-238">SectionB2</name>
 		</location>
-		<location id="id25" x="-221" y="-612">
-			<name x="-204" y="-620">SectionB_stop</name>
+		<location id="id23" x="-221" y="-739">
+			<name x="-204" y="-747">SectionB1_start</name>
 		</location>
-		<init ref="id14"/>
+		<init ref="id12"/>
 		<transition>
-			<source ref="id25"/>
+			<source ref="id9"/>
+			<target ref="id13"/>
+			<label kind="guard" x="-204" y="-569">!motorStop</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-204" y="-714">bagMovement&gt;=28 &amp;&amp;
+bagMovement&lt;=40 &amp;&amp;
+!motorStop</label>
+			<label kind="synchronisation" x="-204" y="-663">BroadcastM!</label>
+			<label kind="comments" x="-195" y="-637">16+12 and 16+24</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-204" y="-408">!motorStop</label>
+			<label kind="guard" x="-238" y="-1105">newBag</label>
+			<label kind="assignment" x="-263" y="-1088">bagMovement:=0</label>
 		</transition>
 		<transition>
-			<source ref="id11"/>
-			<target ref="id25"/>
+			<source ref="id10"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-204" y="-841">bagMovement&gt;=16 &amp;&amp;
+!motorStop &amp;&amp;
+!isBlocked</label>
+			<label kind="comments" x="-195" y="-782">8+8</label>
 		</transition>
 		<transition>
-			<source ref="id17"/>
-			<target ref="id11"/>
+			<source ref="id15"/>
+			<target ref="id10"/>
+			<label kind="guard" x="-204" y="-977">bagMovement&gt;=8 &amp;&amp;
+!motorStop</label>
+			<label kind="assignment" x="-204" y="-943">isBlocked:=true</label>
 		</transition>
 		<transition>
-			<source ref="id16"/>
-			<target ref="id15"/>
+			<source ref="id14"/>
+			<target ref="id13"/>
 			<label kind="guard" x="-178" y="-68">isForward</label>
 			<nail x="-144" y="-76"/>
 		</transition>
 		<transition>
-			<source ref="id18"/>
-			<target ref="id16"/>
+			<source ref="id16"/>
+			<target ref="id14"/>
 			<label kind="guard" x="-8" y="-68">isForward</label>
 			<nail x="25" y="-76"/>
 		</transition>
 		<transition>
-			<source ref="id24"/>
-			<target ref="id18"/>
+			<source ref="id22"/>
+			<target ref="id16"/>
 			<label kind="guard" x="119" y="-195">!motorStop</label>
 		</transition>
 		<transition>
-			<source ref="id14"/>
-			<target ref="id22"/>
+			<source ref="id12"/>
+			<target ref="id20"/>
 			<label kind="guard" x="51" y="-1105">fakeStop &amp;&amp; newBag</label>
 			<label kind="assignment" x="51" y="-1088">isBlocked:=true</label>
 		</transition>
 		<transition>
-			<source ref="id19"/>
-			<target ref="id14"/>
-		</transition>
-		<transition>
-			<source ref="id12"/>
-			<target ref="id17"/>
-		</transition>
-		<transition>
-			<source ref="id14"/>
+			<source ref="id17"/>
 			<target ref="id12"/>
-			<label kind="guard" x="-229" y="-1105">newBag</label>
+			<label kind="assignment" x="-272" y="-1173">newBag:=false</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="assignment" x="85" y="-1173">newBag:=false</label>
 		</transition>
 		<transition>
 			<source ref="id13"/>
 			<target ref="id14"/>
+			<label kind="guard" x="-178" y="-153">!isForward</label>
 		</transition>
 		<transition>
-			<source ref="id15"/>
+			<source ref="id14"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-178" y="-153">!isForward</label>
+			<label kind="guard" x="-17" y="-153">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id16"/>
 			<target ref="id18"/>
-			<label kind="guard" x="-17" y="-153">!isForward</label>
-		</transition>
-		<transition>
-			<source ref="id18"/>
-			<target ref="id20"/>
 			<label kind="guard" x="170" y="-153">!isForward</label>
 		</transition>
 		<transition>
-			<source ref="id21"/>
-			<target ref="id19"/>
+			<source ref="id19"/>
+			<target ref="id17"/>
 		</transition>
 		<transition>
-			<source ref="id15"/>
-			<target ref="id21"/>
+			<source ref="id13"/>
+			<target ref="id19"/>
 			<label kind="guard" x="-331" y="-153">isForward</label>
 		</transition>
 		<transition>
-			<source ref="id20"/>
-			<target ref="id13"/>
+			<source ref="id18"/>
+			<target ref="id11"/>
 		</transition>
 		<transition>
-			<source ref="id22"/>
-			<target ref="id23"/>
+			<source ref="id20"/>
+			<target ref="id21"/>
 			<label kind="guard" x="119" y="-969">!isBlocked</label>
 		</transition>
 		<transition>
-			<source ref="id23"/>
-			<target ref="id24"/>
+			<source ref="id21"/>
+			<target ref="id22"/>
 			<label kind="synchronisation" x="119" y="-289">BroadcastM!</label>
 		</transition>
 	</template>
 	<template>
 		<name>BaggageHandler</name>
 		<declaration>clock checkInDelay;</declaration>
-		<location id="id26" x="25" y="8">
+		<location id="id24" x="25" y="8">
 			<label kind="invariant" x="42" y="0">2&lt;=checkInDelay</label>
 			<label kind="comments" x="42" y="-42">need 1.4 seconds to be 
 delayed for next bag</label>
 		</location>
-		<location id="id27" x="-170" y="8">
+		<location id="id25" x="-170" y="8">
 			<name x="-212" y="8">Idle</name>
 			<urgent/>
 		</location>
-		<init ref="id27"/>
+		<init ref="id25"/>
 		<transition>
-			<source ref="id27"/>
-			<target ref="id26"/>
+			<source ref="id25"/>
+			<target ref="id24"/>
 			<label kind="assignment" x="-127" y="-136">checkInDelay:=0,
 newBag:=true</label>
 			<nail x="-119" y="-93"/>
 			<nail x="-25" y="-93"/>
 		</transition>
 		<transition>
-			<source ref="id26"/>
-			<target ref="id27"/>
+			<source ref="id24"/>
+			<target ref="id25"/>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
