@@ -9,7 +9,11 @@ bool isBlocked;
 bool fakeStop=false;
 bool motorStop;
 bool newBag=false;
-clock done;</declaration>
+bool destinationBlack;
+
+clock globalClock;
+clock execution;
+int clockState = 0;</declaration>
 	<template>
 		<name>Sensor</name>
 		<location id="id0" x="187" y="-119">
@@ -24,16 +28,14 @@ clock done;</declaration>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="68" y="-238">SensorRead!</label>
 			<label kind="assignment" x="68" y="-221">isBlack:=true,
 isBlocked:=false</label>
-			<label kind="comments" x="85" y="-263">Black</label>
+			<label kind="comments" x="85" y="-246">Black</label>
 			<nail x="0" y="-204"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id2"/>
-			<label kind="synchronisation" x="-255" y="-68">SensorRead!</label>
 			<label kind="assignment" x="-255" y="-51">isBlack:=false,
 isBlocked:=false</label>
 			<label kind="comments" x="-238" y="-8">Yellow</label>
@@ -97,44 +99,60 @@ isBlocked:=false</label>
 	<template>
 		<name>MotorAB</name>
 		<declaration>clock x;</declaration>
-		<location id="id6" x="17" y="8">
+		<location id="id6" x="424" y="8">
+			<committed/>
 		</location>
 		<location id="id7" x="-221" y="8">
 			<name x="-280" y="16">Forward</name>
 		</location>
-		<location id="id8" x="255" y="8">
-			<name x="213" y="16">Stop</name>
+		<location id="id8" x="195" y="8">
+			<name x="153" y="16">Stop</name>
 		</location>
 		<init ref="id7"/>
 		<transition>
-			<source ref="id6"/>
-			<target ref="id7"/>
-			<label kind="guard" x="-178" y="59">(isForward &amp;&amp; isBlack) ||
-(!isForward &amp;&amp; !isBlack)</label>
-			<label kind="synchronisation" x="-136" y="34">BroadcastM?</label>
-			<nail x="-8" y="102"/>
-			<nail x="-187" y="102"/>
-		</transition>
-		<transition>
-			<source ref="id6"/>
+			<source ref="id7"/>
 			<target ref="id8"/>
-			<label kind="guard" x="59" y="-34">(isForward &amp;&amp; !isBlack) || 
+			<label kind="guard" x="-68" y="-68">(isForward &amp;&amp; !isBlack) || 
 (!isForward &amp;&amp; isBlack)</label>
-			<label kind="synchronisation" x="93" y="-68">BroadcastM?</label>
-			<label kind="assignment" x="85" y="-51">motorStop:=true</label>
+			<label kind="synchronisation" x="-34" y="-85">BroadcastM?</label>
+			<label kind="assignment" x="-42" y="-34">motorStop:=true,
+clockState:=0</label>
 		</transition>
 		<transition>
 			<source ref="id7"/>
-			<target ref="id6"/>
-			<label kind="synchronisation" x="-144" y="-17">SensorRead?</label>
+			<target ref="id7"/>
+			<label kind="guard" x="-408" y="76">(isForward &amp;&amp; isBlack) ||
+(!isForward &amp;&amp; !isBlack)</label>
+			<label kind="synchronisation" x="-374" y="59">BroadcastM?</label>
+			<nail x="-221" y="119"/>
+			<nail x="-442" y="119"/>
+			<nail x="-442" y="8"/>
+			<nail x="-238" y="8"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="170" y="-246">Reverse!</label>
+			<label kind="assignment" x="144" y="-229">motorStop:=false</label>
+			<nail x="578" y="8"/>
+			<nail x="578" y="-212"/>
+			<nail x="-221" y="-212"/>
 		</transition>
 		<transition>
 			<source ref="id8"/>
-			<target ref="id7"/>
-			<label kind="synchronisation" x="-17" y="-178">Reverse!</label>
-			<label kind="assignment" x="-42" y="-161">motorStop:=false</label>
-			<nail x="212" y="-136"/>
-			<nail x="-178" y="-136"/>
+			<target ref="id6"/>
+			<label kind="guard" x="246" y="-144">!isForward &amp;&amp; 
+clockState&gt;=40+53</label>
+			<nail x="195" y="-102"/>
+			<nail x="424" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="guard" x="263" y="59">isForward &amp;&amp; 
+clockState==40</label>
+			<nail x="195" y="102"/>
+			<nail x="424" y="102"/>
 		</transition>
 	</template>
 	<template>
