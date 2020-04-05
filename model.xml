@@ -11,15 +11,13 @@ bool motorStop;
 bool newBag=false;
 bool destinationBlack;
 
-clock globalClock;
-clock execution;
-int clockState = 0;</declaration>
+clock clockState;</declaration>
 	<template>
 		<name>Sensor</name>
-		<location id="id0" x="187" y="-119">
+		<location id="id0" x="144" y="-119">
 			<committed/>
 		</location>
-		<location id="id1" x="-289" y="-119">
+		<location id="id1" x="-246" y="-119">
 			<committed/>
 		</location>
 		<location id="id2" x="-51" y="-119">
@@ -28,32 +26,36 @@ int clockState = 0;</declaration>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id2"/>
-			<label kind="assignment" x="68" y="-221">isBlack:=true,
+			<label kind="assignment" x="8" y="-42">isBlack:=true,
 isBlocked:=false</label>
-			<label kind="comments" x="85" y="-246">Black</label>
-			<nail x="0" y="-204"/>
+			<label kind="comments" x="161" y="-127">Black</label>
+			<nail x="102" y="-42"/>
+			<nail x="-8" y="-42"/>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id2"/>
-			<label kind="assignment" x="-255" y="-51">isBlack:=false,
+			<label kind="assignment" x="-195" y="-42">isBlack:=false,
 isBlocked:=false</label>
-			<label kind="comments" x="-238" y="-8">Yellow</label>
-			<nail x="-110" y="-42"/>
+			<label kind="comments" x="-314" y="-127">Yellow</label>
+			<nail x="-204" y="-42"/>
+			<nail x="-102" y="-42"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id0"/>
-			<label kind="guard" x="68" y="-51">isBlocked</label>
-			<label kind="synchronisation" x="68" y="-68">Broadcast?</label>
-			<nail x="8" y="-42"/>
+			<label kind="guard" x="17" y="-229">isBlocked</label>
+			<label kind="synchronisation" x="8" y="-246">Broadcast?</label>
+			<nail x="-8" y="-204"/>
+			<nail x="102" y="-204"/>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-238" y="-195">isBlocked</label>
-			<label kind="synchronisation" x="-246" y="-212">Broadcast?</label>
+			<label kind="guard" x="-187" y="-229">isBlocked</label>
+			<label kind="synchronisation" x="-196" y="-246">Broadcast?</label>
 			<nail x="-102" y="-204"/>
+			<nail x="-204" y="-204"/>
 		</transition>
 	</template>
 	<template>
@@ -75,24 +77,24 @@ isBlocked:=false</label>
 		<location id="id4" x="76" y="0">
 			<name x="93" y="-8">Backward</name>
 		</location>
-		<location id="id5" x="-127" y="0">
-			<name x="-195" y="-17">Forward</name>
+		<location id="id5" x="-102" y="0">
+			<name x="-170" y="-17">Forward</name>
 		</location>
 		<init ref="id5"/>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id5"/>
-			<label kind="synchronisation" x="-51" y="76">Reverse?</label>
-			<label kind="assignment" x="-68" y="93">isForward:=true</label>
+			<label kind="synchronisation" x="-42" y="76">Reverse?</label>
+			<label kind="assignment" x="-59" y="93">isForward:=true</label>
 			<nail x="34" y="76"/>
-			<nail x="-76" y="76"/>
+			<nail x="-51" y="76"/>
 		</transition>
 		<transition>
 			<source ref="id5"/>
 			<target ref="id4"/>
-			<label kind="synchronisation" x="-51" y="-110">Reverse?</label>
-			<label kind="assignment" x="-76" y="-127">isForward:=false</label>
-			<nail x="-76" y="-85"/>
+			<label kind="synchronisation" x="-43" y="-110">Reverse?</label>
+			<label kind="assignment" x="-68" y="-127">isForward:=false</label>
+			<nail x="-51" y="-85"/>
 			<nail x="34" y="-85"/>
 		</transition>
 	</template>
@@ -102,8 +104,8 @@ isBlocked:=false</label>
 		<location id="id6" x="424" y="8">
 			<committed/>
 		</location>
-		<location id="id7" x="-221" y="8">
-			<name x="-280" y="16">Forward</name>
+		<location id="id7" x="-119" y="8">
+			<name x="-178" y="16">Forward</name>
 		</location>
 		<location id="id8" x="195" y="8">
 			<name x="153" y="16">Stop</name>
@@ -112,31 +114,31 @@ isBlocked:=false</label>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id8"/>
-			<label kind="guard" x="-68" y="-68">(isForward &amp;&amp; !isBlack) || 
+			<label kind="guard" x="-34" y="-68">(isForward &amp;&amp; !isBlack) || 
 (!isForward &amp;&amp; isBlack)</label>
-			<label kind="synchronisation" x="-34" y="-85">BroadcastM?</label>
-			<label kind="assignment" x="-42" y="-34">motorStop:=true,
+			<label kind="synchronisation" x="0" y="-85">BroadcastM?</label>
+			<label kind="assignment" x="-8" y="-34">motorStop:=true,
 clockState:=0</label>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id7"/>
-			<label kind="guard" x="-408" y="76">(isForward &amp;&amp; isBlack) ||
+			<label kind="guard" x="-306" y="76">(isForward &amp;&amp; isBlack) ||
 (!isForward &amp;&amp; !isBlack)</label>
-			<label kind="synchronisation" x="-374" y="59">BroadcastM?</label>
-			<nail x="-221" y="119"/>
-			<nail x="-442" y="119"/>
-			<nail x="-442" y="8"/>
-			<nail x="-238" y="8"/>
+			<label kind="synchronisation" x="-272" y="59">BroadcastM?</label>
+			<nail x="-119" y="119"/>
+			<nail x="-340" y="119"/>
+			<nail x="-340" y="8"/>
+			<nail x="-136" y="8"/>
 		</transition>
 		<transition>
 			<source ref="id6"/>
 			<target ref="id7"/>
 			<label kind="synchronisation" x="170" y="-246">Reverse!</label>
 			<label kind="assignment" x="144" y="-229">motorStop:=false</label>
-			<nail x="578" y="8"/>
-			<nail x="578" y="-212"/>
-			<nail x="-221" y="-212"/>
+			<nail x="484" y="8"/>
+			<nail x="484" y="-212"/>
+			<nail x="-119" y="-212"/>
 		</transition>
 		<transition>
 			<source ref="id8"/>
@@ -171,27 +173,27 @@ clockState==40</label>
 		<location id="id12" x="-51" y="-1147">
 			<name x="-102" y="-1181">arrivedCheckin</name>
 		</location>
-		<location id="id13" x="-221" y="-127">
-			<name x="-255" y="-102">SectionC1</name>
+		<location id="id13" x="-221" y="-475">
+			<name x="-255" y="-450">SectionC1</name>
 		</location>
-		<location id="id14" x="-59" y="-127">
-			<name x="-93" y="-102">SectionF1</name>
+		<location id="id14" x="-59" y="-475">
+			<name x="-93" y="-450">SectionF1</name>
 		</location>
 		<location id="id15" x="-221" y="-1011">
 			<name x="-204" y="-1020">SectionA1_a</name>
 		</location>
-		<location id="id16" x="102" y="-127">
-			<name x="76" y="-102">SectionD1</name>
+		<location id="id16" x="102" y="-475">
+			<name x="76" y="-450">SectionD1</name>
 		</location>
 		<location id="id17" x="-382" y="-1147">
 			<name x="-424" y="-1181">DestinationA</name>
 			<label kind="comments" x="-467" y="-1198">Destination of Black bags</label>
 		</location>
-		<location id="id18" x="314" y="-127">
-			<name x="288" y="-110">SectionE2</name>
+		<location id="id18" x="314" y="-475">
+			<name x="288" y="-458">SectionE2</name>
 		</location>
-		<location id="id19" x="-382" y="-127">
-			<name x="-424" y="-110">SectionE1</name>
+		<location id="id19" x="-382" y="-475">
+			<name x="-424" y="-458">SectionE1</name>
 		</location>
 		<location id="id20" x="102" y="-1011">
 			<name x="119" y="-1020">Initial2</name>
@@ -199,8 +201,8 @@ clockState==40</label>
 		<location id="id21" x="102" y="-875">
 			<name x="119" y="-883">SectionA2</name>
 		</location>
-		<location id="id22" x="102" y="-230">
-			<name x="119" y="-238">SectionB2</name>
+		<location id="id22" x="102" y="-578">
+			<name x="119" y="-586">SectionB2</name>
 		</location>
 		<location id="id23" x="-221" y="-739">
 			<name x="-204" y="-747">SectionB1_start</name>
@@ -244,19 +246,19 @@ bagMovement&lt;=40 &amp;&amp;
 		<transition>
 			<source ref="id14"/>
 			<target ref="id13"/>
-			<label kind="guard" x="-178" y="-68">isForward</label>
-			<nail x="-144" y="-76"/>
+			<label kind="guard" x="-178" y="-416">isForward</label>
+			<nail x="-144" y="-424"/>
 		</transition>
 		<transition>
 			<source ref="id16"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-8" y="-68">isForward</label>
-			<nail x="25" y="-76"/>
+			<label kind="guard" x="-8" y="-416">isForward</label>
+			<nail x="25" y="-424"/>
 		</transition>
 		<transition>
 			<source ref="id22"/>
 			<target ref="id16"/>
-			<label kind="guard" x="119" y="-195">!motorStop</label>
+			<label kind="guard" x="119" y="-543">!motorStop</label>
 		</transition>
 		<transition>
 			<source ref="id12"/>
@@ -277,17 +279,17 @@ bagMovement&lt;=40 &amp;&amp;
 		<transition>
 			<source ref="id13"/>
 			<target ref="id14"/>
-			<label kind="guard" x="-178" y="-153">!isForward</label>
+			<label kind="guard" x="-178" y="-501">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id14"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-17" y="-153">!isForward</label>
+			<label kind="guard" x="-17" y="-501">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id16"/>
 			<target ref="id18"/>
-			<label kind="guard" x="170" y="-153">!isForward</label>
+			<label kind="guard" x="170" y="-501">!isForward</label>
 		</transition>
 		<transition>
 			<source ref="id19"/>
@@ -296,7 +298,7 @@ bagMovement&lt;=40 &amp;&amp;
 		<transition>
 			<source ref="id13"/>
 			<target ref="id19"/>
-			<label kind="guard" x="-331" y="-153">isForward</label>
+			<label kind="guard" x="-331" y="-501">isForward</label>
 		</transition>
 		<transition>
 			<source ref="id18"/>
@@ -310,15 +312,15 @@ bagMovement&lt;=40 &amp;&amp;
 		<transition>
 			<source ref="id21"/>
 			<target ref="id22"/>
-			<label kind="synchronisation" x="119" y="-289">BroadcastM!</label>
+			<label kind="synchronisation" x="119" y="-637">BroadcastM!</label>
 		</transition>
 	</template>
 	<template>
 		<name>BaggageHandler</name>
 		<declaration>clock checkInDelay;</declaration>
 		<location id="id24" x="25" y="8">
-			<label kind="invariant" x="42" y="0">2&lt;=checkInDelay</label>
-			<label kind="comments" x="42" y="-42">need 1.4 seconds to be 
+			<label kind="invariant" x="-25" y="25">2&lt;=checkInDelay</label>
+			<label kind="comments" x="-144" y="51">need 1.4 seconds to be 
 delayed for next bag</label>
 		</location>
 		<location id="id25" x="-170" y="8">
@@ -344,7 +346,7 @@ Bag = DistributionBelt();
 MotorC = MotorDistribution(Reverse);
 
 // List one or more processes to be composed into a system.
-system Bag, MotorC, MotorAB, Sensor, BroadcastC, BaggageHandler; </system>
+system MotorC, MotorAB, Sensor, BroadcastC, BaggageHandler, Bag; </system>
 	<queries>
 	</queries>
 </nta>
