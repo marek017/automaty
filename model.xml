@@ -679,27 +679,69 @@ MotorC = MotorDistribution(Reverse);
 system MotorC, MotorFeed, BagSensor, BroadcastC, BaggageHandler, SingleSort, Bag1, Bag2, Bag3;</system>
 	<queries>
 		<query>
-			<formula>A[] not ((Bag1.SectionC1_start and Bag2.SectionC1_start) or (Bag2.SectionC1_start and Bag3.SectionC1_start) or (Bag1.SectionC1_start and Bag3.SectionC1_start))
+			<formula>A&lt;&gt; (Bag1.DestinationA imply Bag1.privateColor==1 and Bag2.DestinationA imply Bag1.privateColor==1 and Bag3.DestinationB imply Bag1.privateColor==0)
 			</formula>
-			<comment>
+			<comment>Check wether bags are delivered at the right destinations.
 			</comment>
 		</query>
 		<query>
-			<formula>E&lt;&gt; not ((Bag1.SectionC1_start or Bag1.SectionC1_end_destA or Bag1.SectionC1_end_destB) and (Bag2.Waiting OR Bag3.Waiting))
+			<formula>A&lt;&gt; not ((Bag1.SectionC1_start and Bag2.SectionC1_start) or (Bag2.SectionC1_start and Bag3.SectionC1_start) or (Bag1.SectionC1_start and Bag3.SectionC1_start))
 			</formula>
-			<comment>
+			<comment>Check wether bumping occures.
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; not ((Bag1.SectionC1_start or Bag1.SectionC1_end_destA or Bag1.SectionC1_end_destB) and (MotorC.Backward))
+			</formula>
+			<comment>Check if stopping occures on delivery belt while bag is turning in section C. + distribution bel???
 			</comment>
 		</query>
 		<query>
 			<formula>E&lt;&gt; Bag1.FinalState and Bag2.FinalState and Bag3.FinalState
 			</formula>
-			<comment>
+			<comment>Check if evry bag is eventually delivered.
 			</comment>
 		</query>
 		<query>
-			<formula>A[] Bag1.privateColor == 0 imply Bag1.DestinationA and MotorC.Forward
+			<formula> E&lt;&gt; not ((Bag1.SectionF1_A or Bag1.SectionF1_B or Bag1.SectionD2_start or  Bag1.SectionD2_end or Bag1.SectionE2_start or Bag1.SectionE2_end) and (MotorC.Forward))
 			</formula>
-			<comment>
+			<comment>Check if distribution belt is not reversed when it carries a bag.
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; not ((Bag1.SectionE1_start or Bag1.SectionE1_end) and (MotorC.Backward))
+			</formula>
+			<comment>Check if distribution belt is not reversed when it caries a bag.
+			</comment>
+		</query>
+		<query>
+			<formula>A[] (Bag1.SectionC1_start imply A&lt;&gt; Bag1.SectionC1_end_destA)
+			</formula>
+			<comment>Check if stopping occures on distribution belt while bag is turning in section C.
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; not ((Bag1.SectionC1_start or Bag1.SectionC1_end_destA or Bag1.SectionC1_end_destB) and (motorStop==true))
+			</formula>
+			<comment>Check if feed belt is stopped  while bag is in section C.
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Bag1.FinalState and Bag2.FinalState and Bag3.FinalState
+			</formula>
+			<comment>Check if evry bag is eventually delivered.
+			</comment>
+		</query>
+		<query>
+			<formula>A[] (not deadlock)
+			</formula>
+			<comment>Checks wether model system has no deadlocks.
+			</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; (Bag1.DestinationA imply Bag1.privateColor==1 and Bag2.DestinationA imply Bag1.privateColor==1 and Bag3.DestinationB imply Bag1.privateColor==0)
+			</formula>
+			<comment>Check wether bags are delivered at the right destinations.
 			</comment>
 		</query>
 	</queries>
