@@ -168,7 +168,7 @@ int Color;</declaration>
 		</location>
 		<location id="id9" x="-221" y="-314">
 			<name x="-204" y="-323">SetionB1_end</name>
-			<label kind="invariant" x="-204" y="-306">bagMovement&lt;=8</label>
+			<label kind="invariant" x="-204" y="-306">bagMovement&lt;=10</label>
 		</location>
 		<location id="id10" x="-374" y="0">
 			<name x="-425" y="8">SectionD1_end</name>
@@ -208,7 +208,8 @@ int Color;</declaration>
 			<label kind="invariant" x="-459" y="-59">bagMovement&lt;=28</label>
 		</location>
 		<location id="id19" x="-221" y="-433">
-			<name x="-212" y="-459">SectionB1_stop_position</name>
+			<name x="-212" y="-467">SectionB1_stop_position</name>
+			<label kind="invariant" x="-204" y="-450">bagMovement&lt;=2</label>
 		</location>
 		<location id="id20" x="-221" y="-722">
 			<name x="-204" y="-731">SectionA1_scanner_finish</name>
@@ -219,7 +220,7 @@ int Color;</declaration>
 		</location>
 		<location id="id22" x="-595" y="-433">
 			<name x="-671" y="-476">SetionB1_stop_positionNEtreba</name>
-			<label kind="comments" x="-994" y="-407">Invariant:
+			<label kind="comments" x="-552" y="-518">Invariant:
 bagMovement&lt;=10</label>
 			<urgent/>
 		</location>
@@ -269,36 +270,38 @@ bagMovement&lt;=10</label>
 			<name x="382" y="-875">SectionA2</name>
 		</location>
 		<location id="id35" x="399" y="-382">
-			<name x="416" y="-390">SectionB2</name>
+			<name x="416" y="-408">SectionB2</name>
 		</location>
 		<location id="id36" x="-221" y="-578">
 			<name x="-204" y="-586">SectionB1_start</name>
-			<label kind="invariant" x="-204" y="-569">bagMovement&lt;=10</label>
+			<label kind="invariant" x="-204" y="-569">bagMovement&lt;=12</label>
 		</location>
 		<init ref="id25"/>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-59" y="-450">motorStop &amp;&amp;
+bagMovement==2</label>
+		</transition>
 		<transition>
 			<source ref="id8"/>
 			<target ref="id19"/>
 			<label kind="guard" x="-34" y="-382">!motorStop</label>
+			<label kind="assignment" x="-50" y="-365">bagMovement:=2</label>
 			<nail x="76" y="-365"/>
 			<nail x="-68" y="-365"/>
 		</transition>
 		<transition>
 			<source ref="id19"/>
-			<target ref="id8"/>
-			<label kind="guard" x="-51" y="-433">ifValue==true</label>
-			<label kind="synchronisation" x="-42" y="-450">Broadcast?</label>
-		</transition>
-		<transition>
-			<source ref="id19"/>
 			<target ref="id9"/>
-			<label kind="guard" x="-212" y="-374">!motorStop</label>
+			<label kind="guard" x="-212" y="-391">bagMovement==2 &amp;&amp; 
+!motorStop</label>
 			<label kind="assignment" x="-212" y="-357">bagMovement:=0</label>
 		</transition>
 		<transition>
 			<source ref="id9"/>
 			<target ref="id26"/>
-			<label kind="guard" x="-204" y="-289">bagMovement&gt;=8 &amp;&amp; 
+			<label kind="guard" x="-204" y="-289">bagMovement&gt;=10 &amp;&amp; 
 !motorStop</label>
 			<label kind="assignment" x="-204" y="-255">bagMovement:=0</label>
 		</transition>
@@ -420,7 +423,7 @@ fakeStop</label>
 		<transition>
 			<source ref="id36"/>
 			<target ref="id19"/>
-			<label kind="guard" x="-204" y="-535">bagMovement&gt;=10 &amp;&amp;
+			<label kind="guard" x="-204" y="-552">bagMovement==12 &amp;&amp;
 !motorStop</label>
 			<label kind="assignment" x="-204" y="-501">bagMovement:=0</label>
 			<label kind="comments" x="-51" y="-518">16+12 and 16+24</label>
@@ -444,9 +447,10 @@ isRead</label>
 		<transition>
 			<source ref="id25"/>
 			<target ref="id28"/>
-			<label kind="guard" x="-229" y="-1122">!motorStop</label>
+			<label kind="guard" x="-229" y="-1156">!motorStop</label>
 			<label kind="synchronisation" x="-229" y="-1105">Bag[Color]?</label>
-			<label kind="assignment" x="-246" y="-1139">bagMovement:=0</label>
+			<label kind="assignment" x="-246" y="-1139">bagMovement:=0,
+isBlocked:=true</label>
 			<label kind="comments" x="-340" y="-1122">newBag &amp;&amp; 
 isForward &amp;&amp; 
 !motorStop</label>
@@ -456,8 +460,7 @@ isForward &amp;&amp;
 			<target ref="id23"/>
 			<label kind="guard" x="-204" y="-969">bagMovement==2 &amp;&amp;
 !motorStop</label>
-			<label kind="assignment" x="-204" y="-935">isBlocked:=true,
-bagMovement:=0</label>
+			<label kind="assignment" x="-204" y="-935">bagMovement:=0</label>
 		</transition>
 		<transition>
 			<source ref="id35"/>
@@ -489,13 +492,14 @@ bagMovement:=0</label>
 		<transition>
 			<source ref="id34"/>
 			<target ref="id35"/>
-			<label kind="synchronisation" x="374" y="-451">BroadcastM!</label>
+			<label kind="synchronisation" x="391" y="-654">BroadcastM!</label>
 		</transition>
 	</template>
 	<template>
 		<name>SingleSort</name>
 		<declaration>clock done;
-clock now;</declaration>
+clock now;
+clock systemTime;</declaration>
 		<location id="id37" x="-705" y="-357">
 			<name x="-697" y="-382">Loop</name>
 			<urgent/>
@@ -521,7 +525,7 @@ clock now;</declaration>
 		</location>
 		<location id="id43" x="-178" y="-127" color="#ff0000">
 			<name x="-229" y="-127">Stop</name>
-			<label kind="invariant" x="-263" y="-110">done&lt;=40</label>
+			<label kind="invariant" x="-263" y="-110">done&lt;=60</label>
 		</location>
 		<location id="id44" x="425" y="-127" color="#00ff00">
 			<name x="442" y="-153">Run</name>
@@ -641,7 +645,7 @@ ifValue:=true</label>
 		<transition>
 			<source ref="id43"/>
 			<target ref="id44"/>
-			<label kind="guard" x="-85" y="-17">done&gt;=40 &amp;&amp;
+			<label kind="guard" x="-85" y="-17">done&gt;=60 &amp;&amp;
 isForward</label>
 			<label kind="synchronisation" x="0" y="0">Reverse!</label>
 			<label kind="assignment" x="-93" y="25">isForward:=!isForward,
@@ -655,7 +659,7 @@ done:=0</label>
 			<source ref="id43"/>
 			<target ref="id41"/>
 			<label kind="guard" x="-255" y="-17">!isForward &amp;&amp; 
-done&gt;=40</label>
+done&gt;=60</label>
 			<label kind="assignment" x="-246" y="-34">done:=0</label>
 		</transition>
 		<transition>
