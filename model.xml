@@ -15,6 +15,11 @@ const int BLOCKED = 70;
 const int YELLOW = 60;
 const int BLACK = 45;
 
+//Color constants
+const int B = 1;
+const int Y = 0;
+int Color;
+
 //DistributionBelt
 int Belt;
 const int LEFT = 0;
@@ -55,10 +60,7 @@ int totalNoOfBags = 0;
 
 
 
-//Color constants
-const int B = 1;
-const int Y = 0;
-int Color;</declaration>
+</declaration>
 	<template>
 		<name>BagSensor</name>
 		<parameter>int belt</parameter>
@@ -381,7 +383,7 @@ bagMovement&gt;=24</label>
 			<target ref="id39"/>
 			<label kind="guard" x="612" y="-1071">!motorStop &amp;&amp;
 Belt == RIGHT</label>
-			<label kind="synchronisation" x="612" y="-1037">Bag[Color][Belt]?</label>
+			<label kind="synchronisation" x="612" y="-1037">Bag[Color][RIGHT]?</label>
 			<label kind="assignment" x="612" y="-1011">bagMovement:=0,
 isBlocked:=true,
 privateColor:=Color,
@@ -546,11 +548,11 @@ isRead</label>
 			<label kind="guard" x="34" y="-1079">!motorStop &amp;&amp;
 Belt == LEFT &amp;&amp;
 fakeStop</label>
-			<label kind="synchronisation" x="102" y="-1037">Bag[Color][Belt]?</label>
+			<label kind="synchronisation" x="102" y="-1037">Bag[Color][LEFT]?</label>
 			<label kind="assignment" x="25" y="-1011">bagMovement:=0,
 isBlocked:=true,
-privateColor:=(Color==B) ? BLACK : YELLOW,
 belt = Belt</label>
+			<label kind="comments" x="0" y="-909">privateColor:=(Color==B) ? BLACK : YELLOW,</label>
 		</transition>
 		<transition>
 			<source ref="id29"/>
@@ -683,7 +685,6 @@ firstBag:=false</label>
 		<transition>
 			<source ref="id51"/>
 			<target ref="id41"/>
-			<label kind="synchronisation" x="-586" y="-136">toggleMotor[comandingBelt]!</label>
 			<label kind="assignment" x="-544" y="-94">ReceivingBag:=true,
 comandingBelt:=belt,
 done:=0</label>
@@ -726,8 +727,7 @@ done:=0</label>
 		<transition>
 			<source ref="id44"/>
 			<target ref="id47"/>
-			<label kind="guard" x="-102" y="-170">bagsOnBelt&gt;1</label>
-			<label kind="synchronisation" x="-153" y="-153">toggleMotor[comandingBelt]!</label>
+			<label kind="guard" x="-110" y="-153">bagsOnBelt&gt;1</label>
 			<label kind="assignment" x="-119" y="-127">done:=0,
 motorStop:=true</label>
 		</transition>
@@ -811,12 +811,13 @@ either left or right side every time.</label>
 		<transition>
 			<source ref="id53"/>
 			<target ref="id52"/>
-			<label kind="select" x="-170" y="-187">Farba : int [B,Y],
+			<label kind="select" x="-170" y="-187">Farba : int [Y,B],
 whichBelt : int [LEFT, RIGHT]</label>
 			<label kind="guard" x="-144" y="-136">ReceivingBag &amp;&amp;
 totalNoOfBags &lt; 4</label>
-			<label kind="synchronisation" x="-136" y="-153">Bag[Color][Belt]!</label>
-			<label kind="assignment" x="-136" y="-93">checkInDelay:=0</label>
+			<label kind="synchronisation" x="-136" y="-153">Bag[Farba][whichBelt]!</label>
+			<label kind="assignment" x="-136" y="-93">checkInDelay:=0,
+Belt:=whichBelt</label>
 			<nail x="-195" y="-93"/>
 			<nail x="34" y="-93"/>
 		</transition>
@@ -838,15 +839,15 @@ totalNoOfBags:=totalNoOfBags+1</label>
 Bag1 = bagMovement();
 Bag2 = bagMovement();
 Bag3 = bagMovement();
-MotorA = MotorFeed(LEFT);
-MotorB = MotorFeed(RIGHT);
+//MotorA = MotorFeed(LEFT);
+//MotorB = MotorFeed(RIGHT);
 MotorC = MotorDistribution(Reverse);
 SSLeft = SingleSort(LEFT);
 SSRight = SingleSort(RIGHT);
 SensorLeft = BagSensor(LEFT);
 SensorRight = BagSensor(RIGHT);
 // List one or more processes to be composed into a system.
-system MotorA, MotorB, MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;</system>
+system MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;</system>
 	<queries>
 		<query>
 			<formula>A&lt;&gt; (Bag1.DestinationA imply Bag1.privateColor==1 and Bag2.DestinationA imply Bag1.privateColor==1 and Bag3.DestinationB imply Bag1.privateColor==0)
