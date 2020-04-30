@@ -3,9 +3,17 @@
 <nta>
 	<declaration>// Place global declarations here.
 urgent chan Execute;
-chan toggleMotor;
+
+
+//MotorFeedbelt
+chan toggleMotor[2];
 
 chan Bag[2][2]; // [belt]
+
+// isBlocked states
+const int BLOCKED = 70;
+const int YELLOW = 60;
+const int BLACK = 45;
 
 //DistributionBelt
 int Belt;
@@ -14,6 +22,7 @@ const int RIGHT = 1;
 
 //BagSensor
 bool isBlack;
+int sensorValue = BLOCKED;
 
 
 bool isForward=true;
@@ -44,24 +53,30 @@ chan Reverse;
 //BaggageHandler
 int totalNoOfBags = 0;
 
-// isBlocked states
-//const int BLOCKED = 70;
-//const int YELLOW = 60;
-//const int BLACK = 45;
+
 
 //Color constants
-const int Black = 1;
-const int Yellow = 0;
+const int B = 1;
+const int Y = 0;
 int Color;</declaration>
 	<template>
 		<name>BagSensor</name>
+		<parameter>int belt</parameter>
 		<location id="id0" x="-255" y="-119">
 			<name x="-323" y="-127">Inactive</name>
 		</location>
 		<location id="id1" x="-51" y="-119">
-			<name x="-34" y="-127">Active</name>
+			<name x="-25" y="-127">Active</name>
 		</location>
 		<init ref="id0"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id1"/>
+			<label kind="guard" x="85" y="-136">sensorValue==
+BLOCKED</label>
+			<nail x="76" y="-170"/>
+			<nail x="76" y="-68"/>
+		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id0"/>
@@ -77,7 +92,7 @@ int Color;</declaration>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-93" y="25">Color==Yellow</label>
+			<label kind="guard" x="-119" y="25">sensorValue==YELLOW</label>
 			<label kind="synchronisation" x="-76" y="-17">Sensor?</label>
 			<label kind="assignment" x="-93" y="8">isBlack:=false</label>
 			<nail x="8" y="8"/>
@@ -86,7 +101,7 @@ int Color;</declaration>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-93" y="-289">Color==Black</label>
+			<label kind="guard" x="-119" y="-289">sensorValue==BLACK</label>
 			<label kind="synchronisation" x="-76" y="-246">Sensor?</label>
 			<label kind="assignment" x="-93" y="-272">isBlack:=true</label>
 			<nail x="8" y="-246"/>
@@ -139,6 +154,7 @@ destination A
 	</template>
 	<template>
 		<name>MotorFeed</name>
+		<parameter>int belt</parameter>
 		<location id="id5" x="187" y="-25">
 			<name x="204" y="-34">Reverse</name>
 		</location>
@@ -155,14 +171,14 @@ Distribution belt C</label>
 			<source ref="id5"/>
 			<target ref="id6"/>
 			<label kind="guard" x="42" y="85">!isReverse</label>
-			<label kind="synchronisation" x="34" y="59">toggleMotor?</label>
+			<label kind="synchronisation" x="25" y="59">toggleMotor[belt]?</label>
 			<nail x="153" y="85"/>
 			<nail x="8" y="85"/>
 		</transition>
 		<transition>
 			<source ref="id6"/>
 			<target ref="id7"/>
-			<label kind="synchronisation" x="-195" y="59">toggleMotor?</label>
+			<label kind="synchronisation" x="-195" y="59">toggleMotor[belt]?</label>
 			<nail x="-76" y="85"/>
 			<nail x="-221" y="85"/>
 		</transition>
@@ -170,14 +186,14 @@ Distribution belt C</label>
 			<source ref="id6"/>
 			<target ref="id5"/>
 			<label kind="guard" x="51" y="-170">isReverse</label>
-			<label kind="synchronisation" x="42" y="-187">toggleMotor?</label>
+			<label kind="synchronisation" x="25" y="-187">toggleMotor[belt]?</label>
 			<nail x="8" y="-144"/>
 			<nail x="153" y="-144"/>
 		</transition>
 		<transition>
 			<source ref="id7"/>
 			<target ref="id6"/>
-			<label kind="synchronisation" x="-195" y="-187">toggleMotor?</label>
+			<label kind="synchronisation" x="-204" y="-178">toggleMotor[belt]?</label>
 			<nail x="-221" y="-144"/>
 			<nail x="-68" y="-144"/>
 		</transition>
@@ -187,7 +203,7 @@ Distribution belt C</label>
 		<declaration>clock bagMovement;
 int privateColor = -1;
 int belt;
-bool privateIsBlack;</declaration>
+//bool privateIsBlack;</declaration>
 		<location id="id8" x="654" y="-85">
 			<name x="637" y="-76">SectionC2_end_destA</name>
 			<label kind="invariant" x="646" y="-59">bagMovement&lt;=28</label>
@@ -514,7 +530,7 @@ bagMovement&gt;=24</label>
 !motorStop</label>
 			<label kind="assignment" x="-204" y="-646">isBlocked:=false,
 bagMovement:=0,
-privateIsBlack:=isBlack</label>
+sensorValue:=BLOCKED</label>
 		</transition>
 		<transition>
 			<source ref="id24"/>
@@ -533,7 +549,7 @@ fakeStop</label>
 			<label kind="synchronisation" x="102" y="-1037">Bag[Color][Belt]?</label>
 			<label kind="assignment" x="25" y="-1011">bagMovement:=0,
 isBlocked:=true,
-privateColor:=Color,
+privateColor:=(Color==B) ? BLACK : YELLOW,
 belt = Belt</label>
 		</transition>
 		<transition>
@@ -541,7 +557,8 @@ belt = Belt</label>
 			<target ref="id24"/>
 			<label kind="guard" x="-204" y="-969">bagMovement==2 &amp;&amp;
 !motorStop</label>
-			<label kind="assignment" x="-204" y="-935">bagMovement:=0</label>
+			<label kind="assignment" x="-204" y="-935">bagMovement:=0,
+sensorValue:=privateColor</label>
 		</transition>
 		<transition>
 			<source ref="id31"/>
@@ -577,7 +594,7 @@ belt = Belt</label>
 !motorStop</label>
 			<label kind="assignment" x="875" y="-638">isBlocked:=false,
 bagMovement:=0,
-privateIsBlack:=isBlack</label>
+sensorValue:=BLOCKED</label>
 		</transition>
 		<transition>
 			<source ref="id37"/>
@@ -592,7 +609,8 @@ isRead</label>
 			<target ref="id37"/>
 			<label kind="guard" x="875" y="-961">bagMovement==2 &amp;&amp;
 !motorStop</label>
-			<label kind="assignment" x="875" y="-927">bagMovement:=0</label>
+			<label kind="assignment" x="875" y="-927">bagMovement:=0,
+sensorValue:=privateColor</label>
 		</transition>
 	</template>
 	<template>
@@ -615,7 +633,7 @@ int comandingBelt;</declaration>
 			<label kind="invariant" x="-314" y="-391">done&lt;=8</label>
 		</location>
 		<location id="id44" x="59" y="-127">
-			<name x="-17" y="-153">Decision</name>
+			<name x="76" y="-153">Decision</name>
 			<committed/>
 		</location>
 		<location id="id45" x="-178" y="127">
@@ -665,7 +683,7 @@ firstBag:=false</label>
 		<transition>
 			<source ref="id51"/>
 			<target ref="id41"/>
-			<label kind="synchronisation" x="-519" y="-128">toggleMotor!</label>
+			<label kind="synchronisation" x="-586" y="-136">toggleMotor[comandingBelt]!</label>
 			<label kind="assignment" x="-544" y="-94">ReceivingBag:=true,
 comandingBelt:=belt,
 done:=0</label>
@@ -708,8 +726,8 @@ done:=0</label>
 		<transition>
 			<source ref="id44"/>
 			<target ref="id47"/>
-			<label kind="guard" x="-127" y="-144">bagsOnBelt&gt;1</label>
-			<label kind="synchronisation" x="-127" y="-161">toggleMotor!</label>
+			<label kind="guard" x="-102" y="-170">bagsOnBelt&gt;1</label>
+			<label kind="synchronisation" x="-153" y="-153">toggleMotor[comandingBelt]!</label>
 			<label kind="assignment" x="-119" y="-127">done:=0,
 motorStop:=true</label>
 		</transition>
@@ -748,9 +766,9 @@ done&gt;=20</label>
 		<transition>
 			<source ref="id47"/>
 			<target ref="id48"/>
-			<label kind="guard" x="25" y="-85">done&gt;=40 &amp;&amp;
+			<label kind="guard" x="0" y="-51">done&gt;=40 &amp;&amp;
 (isForward &amp;&amp; belt==RIGHT)</label>
-			<label kind="synchronisation" x="34" y="-102">Reverse!</label>
+			<label kind="synchronisation" x="9" y="-68">Reverse!</label>
 			<label kind="assignment" x="8" y="-8">isForward:=!isForward,
 motorStop:=false,
 done:=0</label>
@@ -777,7 +795,7 @@ done&gt;=40</label>
 	<template>
 		<name>BaggageHandler</name>
 		<declaration>clock checkInDelay;
-</declaration>
+int Color;</declaration>
 		<location id="id52" x="68" y="8">
 			<name x="76" y="-25">BagDeployed</name>
 			<label kind="invariant" x="85" y="-8">checkInDelay&lt;=14</label>
@@ -793,13 +811,12 @@ either left or right side every time.</label>
 		<transition>
 			<source ref="id53"/>
 			<target ref="id52"/>
-			<label kind="select" x="-144" y="-187">Farba : int [0,1],
+			<label kind="select" x="-170" y="-187">Farba : int [B,Y],
 whichBelt : int [LEFT, RIGHT]</label>
 			<label kind="guard" x="-144" y="-136">ReceivingBag &amp;&amp;
 totalNoOfBags &lt; 4</label>
 			<label kind="synchronisation" x="-136" y="-153">Bag[Color][Belt]!</label>
-			<label kind="assignment" x="-136" y="-93">checkInDelay:=0,
-Color:=Farba</label>
+			<label kind="assignment" x="-136" y="-93">checkInDelay:=0</label>
 			<nail x="-195" y="-93"/>
 			<nail x="34" y="-93"/>
 		</transition>
@@ -811,16 +828,25 @@ Color:=Farba</label>
 totalNoOfBags:=totalNoOfBags+1</label>
 		</transition>
 	</template>
+	<template>
+		<name>Template0</name>
+		<location id="id54" x="0" y="0">
+		</location>
+		<init ref="id54"/>
+	</template>
 	<system>// Place template instantiations here.
 Bag1 = bagMovement();
 Bag2 = bagMovement();
 Bag3 = bagMovement();
+MotorA = MotorFeed(LEFT);
+MotorB = MotorFeed(RIGHT);
 MotorC = MotorDistribution(Reverse);
 SSLeft = SingleSort(LEFT);
 SSRight = SingleSort(RIGHT);
-
+SensorLeft = BagSensor(LEFT);
+SensorRight = BagSensor(RIGHT);
 // List one or more processes to be composed into a system.
-system MotorC, MotorFeed, BagSensor, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;</system>
+system MotorA, MotorB, MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;</system>
 	<queries>
 		<query>
 			<formula>A&lt;&gt; (Bag1.DestinationA imply Bag1.privateColor==1 and Bag2.DestinationA imply Bag1.privateColor==1 and Bag3.DestinationB imply Bag1.privateColor==0)
