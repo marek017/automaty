@@ -538,9 +538,10 @@ sensorValue:=BLOCKED</label>
 			<source ref="id24"/>
 			<target ref="id22"/>
 			<label kind="guard" x="-204" y="-833">bagMovement==12 &amp;&amp;
-!motorStop &amp;&amp; 
-isRead</label>
+!motorStop</label>
 			<label kind="assignment" x="-204" y="-782">bagMovement:=0</label>
+			<label kind="comments" x="-289" y="-833">&amp;&amp; 
+isRead</label>
 		</transition>
 		<transition>
 			<source ref="id26"/>
