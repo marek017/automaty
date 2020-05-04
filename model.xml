@@ -16,8 +16,8 @@ const int YELLOW = 60;
 const int BLACK = 45;
 
 //Color constants
-const int B = 1;
 const int Y = 0;
+const int B = 1;
 int Color;
 
 //DistributionBelt
@@ -94,7 +94,7 @@ BLOCKED</label>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-119" y="25">sensorValue==YELLOW</label>
+			<label kind="guard" x="-102" y="25">sensorValue==Y</label>
 			<label kind="synchronisation" x="-76" y="-17">Sensor?</label>
 			<label kind="assignment" x="-93" y="8">isBlack:=false</label>
 			<nail x="8" y="8"/>
@@ -103,7 +103,7 @@ BLOCKED</label>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id1"/>
-			<label kind="guard" x="-119" y="-289">sensorValue==BLACK</label>
+			<label kind="guard" x="-102" y="-289">sensorValue==B</label>
 			<label kind="synchronisation" x="-76" y="-246">Sensor?</label>
 			<label kind="assignment" x="-93" y="-272">isBlack:=true</label>
 			<nail x="8" y="-246"/>
@@ -545,12 +545,12 @@ isRead</label>
 		<transition>
 			<source ref="id26"/>
 			<target ref="id29"/>
-			<label kind="guard" x="34" y="-1079">!motorStop &amp;&amp;
-Belt == LEFT &amp;&amp;
-fakeStop</label>
-			<label kind="synchronisation" x="102" y="-1037">Bag[Color][LEFT]?</label>
+			<label kind="guard" x="25" y="-1071">!motorStop &amp;&amp;
+Belt == LEFT</label>
+			<label kind="synchronisation" x="25" y="-1037">Bag[Color][LEFT]?</label>
 			<label kind="assignment" x="25" y="-1011">bagMovement:=0,
 isBlocked:=true,
+privateColor:=Color,
 belt = Belt</label>
 			<label kind="comments" x="0" y="-909">privateColor:=(Color==B) ? BLACK : YELLOW,</label>
 		</transition>
@@ -680,7 +680,7 @@ firstBag:=false</label>
 		<transition>
 			<source ref="id41"/>
 			<target ref="id50"/>
-			<label kind="synchronisation" x="-654" y="-374">Activate!</label>
+			<label kind="synchronisation" x="-654" y="-382">Activate!</label>
 		</transition>
 		<transition>
 			<source ref="id51"/>
@@ -829,12 +829,6 @@ Belt:=whichBelt</label>
 totalNoOfBags:=totalNoOfBags+1</label>
 		</transition>
 	</template>
-	<template>
-		<name>Template0</name>
-		<location id="id54" x="0" y="0">
-		</location>
-		<init ref="id54"/>
-	</template>
 	<system>// Place template instantiations here.
 Bag1 = bagMovement();
 Bag2 = bagMovement();
@@ -847,7 +841,9 @@ SSRight = SingleSort(RIGHT);
 SensorLeft = BagSensor(LEFT);
 SensorRight = BagSensor(RIGHT);
 // List one or more processes to be composed into a system.
-system MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;</system>
+// system MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;
+system MotorC, Executer, SensorLeft, SensorRight, BaggageHandler, SSLeft, Bag1;
+</system>
 	<queries>
 		<query>
 			<formula>A&lt;&gt; (Bag1.DestinationA imply Bag1.privateColor==1 and Bag2.DestinationA imply Bag1.privateColor==1 and Bag3.DestinationB imply Bag1.privateColor==0)
