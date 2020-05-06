@@ -16,12 +16,20 @@ const int YELLOW = 60;
 const int BLACK = 45;
 
 //Color constants
+<<<<<<< Updated upstream
+=======
+//BaggageHandler
+typedef int[0,1] colors;
+>>>>>>> Stashed changes
 const int Y = 0;
 const int B = 1;
 int Color;
 
 //DistributionBelt
+<<<<<<< Updated upstream
 int Belt;
+=======
+>>>>>>> Stashed changes
 const int LEFT = 0;
 const int RIGHT = 1;
 
@@ -51,7 +59,10 @@ chan Passivate[2];
 chan Sensor[2];
 chan Reverse;
 
+<<<<<<< Updated upstream
 //BaggageHandler
+=======
+>>>>>>> Stashed changes
 
 
 
@@ -209,10 +220,17 @@ int belt;
 		<location id="id9" x="1003" y="-85">
 			<name x="909" y="-76">SectionC2_end_destB</name>
 			<label kind="invariant" x="926" y="-59">bagMovement&lt;=28</label>
+<<<<<<< Updated upstream
 		</location>
 		<location id="id10" x="297" y="-433">
 			<name x="271" y="-467">Waiting</name>
 		</location>
+=======
+		</location>
+		<location id="id10" x="297" y="-433">
+			<name x="271" y="-467">Waiting</name>
+		</location>
+>>>>>>> Stashed changes
 		<location id="id11" x="-221" y="-314">
 			<name x="-204" y="-323">SetionB1_end</name>
 			<label kind="invariant" x="-204" y="-306">bagMovement&lt;=11</label>
@@ -381,13 +399,21 @@ bagMovement&gt;=24</label>
 		<transition>
 			<source ref="id24"/>
 			<target ref="id37"/>
+<<<<<<< Updated upstream
 			<label kind="guard" x="612" y="-1071">!motorStop &amp;&amp;
 Belt == RIGHT</label>
+=======
+			<label kind="guard" x="612" y="-1071">!motorStop</label>
+>>>>>>> Stashed changes
 			<label kind="synchronisation" x="612" y="-1037">Bag[Color][RIGHT]?</label>
 			<label kind="assignment" x="612" y="-1011">bagMovement:=0,
 isBlocked:=true,
 privateColor:=Color,
+<<<<<<< Updated upstream
 belt := Belt</label>
+=======
+belt := RIGHT</label>
+>>>>>>> Stashed changes
 		</transition>
 		<transition>
 			<source ref="id20"/>
@@ -532,13 +558,21 @@ isRead</label>
 		<transition>
 			<source ref="id24"/>
 			<target ref="id27"/>
+<<<<<<< Updated upstream
 			<label kind="guard" x="25" y="-1071">!motorStop &amp;&amp;
 Belt == LEFT</label>
+=======
+			<label kind="guard" x="25" y="-1071">!motorStop</label>
+>>>>>>> Stashed changes
 			<label kind="synchronisation" x="25" y="-1037">Bag[Color][LEFT]?</label>
 			<label kind="assignment" x="25" y="-1011">bagMovement:=0,
 isBlocked:=true,
 privateColor:=Color,
+<<<<<<< Updated upstream
 belt = Belt</label>
+=======
+belt = LEFT</label>
+>>>>>>> Stashed changes
 			<label kind="comments" x="0" y="-909">privateColor:=(Color==B) ? BLACK : YELLOW,</label>
 		</transition>
 		<transition>
@@ -787,7 +821,11 @@ int totalNoOfBags = 0;</declaration>
 		</location>
 		<location id="id51" x="-238" y="8">
 			<name x="-272" y="-25">Idle</name>
+<<<<<<< Updated upstream
 			<label kind="comments" x="-187" y="76">We assume that person loading
+=======
+			<label kind="comments" x="76" y="-136">We assume that person loading
+>>>>>>> Stashed changes
  the bags on feed belt takes 
 1.4 seconds to put a bag at 
 either left or right side every time.</label>
@@ -801,8 +839,12 @@ whichBelt : int [LEFT, RIGHT]</label>
 			<label kind="guard" x="-144" y="-136">ReceivingBag &amp;&amp;
 totalNoOfBags &lt; 4</label>
 			<label kind="synchronisation" x="-170" y="-153">Bag[randomColor][whichBelt]!</label>
+<<<<<<< Updated upstream
 			<label kind="assignment" x="-136" y="-93">checkInDelay:=0,
 Belt:=whichBelt</label>
+=======
+			<label kind="assignment" x="-136" y="-93">checkInDelay:=0</label>
+>>>>>>> Stashed changes
 			<nail x="-195" y="-93"/>
 			<nail x="34" y="-93"/>
 		</transition>
@@ -828,7 +870,11 @@ SensorLeft = BagSensor(LEFT);
 SensorRight = BagSensor(RIGHT);
 // List one or more processes to be composed into a system.
 // system MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;
+<<<<<<< Updated upstream
 system MotorC, Executer, SensorLeft, SensorRight, BaggageHandler, SSLeft, SSRight, Bag1;
+=======
+system MotorC, Executer, SensorLeft, SensorRight, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;
+>>>>>>> Stashed changes
 </system>
 	<queries>
 		<query>
