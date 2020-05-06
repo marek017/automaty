@@ -32,7 +32,7 @@ bool isBlack;
 int sensorValue = BLOCKED;
 bool isForward=true;
 bool isReverse=false;
-bool isBlocked;
+//bool isBlocked;
 
 //To ensure only right feed belt is used
 bool fakeStop=false;
@@ -623,10 +623,11 @@ sensorValue:=privateColor</label>
 	<template>
 		<name>SingleSort</name>
 		<parameter>int belt</parameter>
-		<declaration>int done;
+		<declaration>clock systemTime;
 clock sleep;
 int now;
-clock systemTime;
+int done;
+
 bool firstBag = true;
 int thisBelt;
 int bagsOnBelt = 0;</declaration>
@@ -695,7 +696,7 @@ firstBag:=false</label>
 			<target ref="id39"/>
 			<label kind="assignment" x="-561" y="-93">ReceivingBag:=true,
 thisBelt:=belt,
-done:=systemTime</label>
+done:=0</label>
 			<nail x="-587" y="-102"/>
 		</transition>
 		<transition>
@@ -768,8 +769,8 @@ motorStop:=true</label>
 			<label kind="guard" x="110" y="-280">sleep&gt;=20 &amp;&amp;
 ((isForward &amp;&amp; !isBlack) || 
 (!isForward &amp;&amp; isBlack))</label>
-			<label kind="assignment" x="110" y="-229">sleep:=0,
-now:=systemTime</label>
+			<label kind="assignment" x="110" y="-229">sleep:=0</label>
+			<label kind="comments" x="110" y="-204">now:=systemTime</label>
 			<nail x="102" y="-204"/>
 		</transition>
 		<transition>
@@ -812,7 +813,7 @@ int totalNoOfBags = 0;</declaration>
 		</location>
 		<location id="id51" x="-238" y="8">
 			<name x="-272" y="-25">Idle</name>
-			<label kind="comments" x="76" y="-136">We assume that person loading
+			<label kind="comments" x="-187" y="204">We assume that person loading
  the bags on feed belt takes 
 1.4 seconds to put a bag at 
 either left or right side every time.</label>
@@ -821,27 +822,25 @@ either left or right side every time.</label>
 		<transition>
 			<source ref="id51"/>
 			<target ref="id50"/>
-			<label kind="select" x="-136" y="85">whichBelt : int[0,1]</label>
-			<label kind="guard" x="-127" y="127">ReceivingBag &amp;&amp;
+			<label kind="select" x="-136" y="93">whichBelt : int[LEFT,RIGHT]</label>
+			<label kind="guard" x="-136" y="127">ReceivingBag &amp;&amp;
 totalNoOfBags &lt; 4</label>
-			<label kind="synchronisation" x="-127" y="110">Bag[Y][whichBelt]!</label>
-			<label kind="assignment" x="-195" y="170">checkInDelay:=0</label>
+			<label kind="synchronisation" x="-136" y="110">Bag[Y][whichBelt]!</label>
+			<label kind="assignment" x="-136" y="170">checkInDelay:=0</label>
 			<nail x="-187" y="127"/>
 			<nail x="34" y="127"/>
 		</transition>
 		<transition>
 			<source ref="id51"/>
 			<target ref="id50"/>
-			<label kind="select" x="-170" y="-178">whichBelt : int[0,1]</label>
-			<label kind="guard" x="-170" y="-136">ReceivingBag &amp;&amp;
+			<label kind="select" x="-144" y="-178">whichBelt : int[LEFT,RIGHT]</label>
+			<label kind="guard" x="-144" y="-136">ReceivingBag &amp;&amp;
 totalNoOfBags &lt; 4</label>
-			<label kind="synchronisation" x="-170" y="-153">Bag[B][whichBelt]!</label>
-			<label kind="assignment" x="-195" y="-85">checkInDelay:=0</label>
-			<label kind="comments" x="-212" y="-306">randomColor : int[0,1],
-
-
-
-baggagehandleColor:=randomColor,</label>
+			<label kind="synchronisation" x="-144" y="-153">Bag[B][whichBelt]!</label>
+			<label kind="assignment" x="-136" y="-93">checkInDelay:=0</label>
+			<label kind="comments" x="-170" y="-238">Select apparently cannot choose
+ from two parameters at same time.
+randomColor : int[0,1]</label>
 			<nail x="-195" y="-93"/>
 			<nail x="34" y="-93"/>
 		</transition>
