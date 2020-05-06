@@ -16,20 +16,14 @@ const int YELLOW = 60;
 const int BLACK = 45;
 
 //Color constants
-<<<<<<< Updated upstream
-=======
 //BaggageHandler
 typedef int[0,1] colors;
->>>>>>> Stashed changes
 const int Y = 0;
 const int B = 1;
-int Color;
+//int Color;
 
 //DistributionBelt
-<<<<<<< Updated upstream
-int Belt;
-=======
->>>>>>> Stashed changes
+typedef int[0,1] beltSide;
 const int LEFT = 0;
 const int RIGHT = 1;
 
@@ -59,10 +53,6 @@ chan Passivate[2];
 chan Sensor[2];
 chan Reverse;
 
-<<<<<<< Updated upstream
-//BaggageHandler
-=======
->>>>>>> Stashed changes
 
 
 
@@ -211,7 +201,7 @@ Distribution belt C</label>
 		<name>bagMovement</name>
 		<declaration>clock bagMovement;
 int privateColor = -1;
-int belt;
+int belt = -1;
 //bool privateIsBlack;</declaration>
 		<location id="id8" x="654" y="-85">
 			<name x="637" y="-76">SectionC2_end_destA</name>
@@ -220,17 +210,10 @@ int belt;
 		<location id="id9" x="1003" y="-85">
 			<name x="909" y="-76">SectionC2_end_destB</name>
 			<label kind="invariant" x="926" y="-59">bagMovement&lt;=28</label>
-<<<<<<< Updated upstream
 		</location>
 		<location id="id10" x="297" y="-433">
 			<name x="271" y="-467">Waiting</name>
 		</location>
-=======
-		</location>
-		<location id="id10" x="297" y="-433">
-			<name x="271" y="-467">Waiting</name>
-		</location>
->>>>>>> Stashed changes
 		<location id="id11" x="-221" y="-314">
 			<name x="-204" y="-323">SetionB1_end</name>
 			<label kind="invariant" x="-204" y="-306">bagMovement&lt;=11</label>
@@ -270,7 +253,7 @@ int belt;
 		</location>
 		<location id="id20" x="-221" y="-433">
 			<name x="-212" y="-467">SectionB1_stop_position</name>
-			<label kind="invariant" x="-204" y="-450">bagMovement&lt;=2</label>
+			<label kind="invariant" x="-204" y="-450">bagMovement&lt;=1</label>
 		</location>
 		<location id="id21" x="-221" y="-722">
 			<name x="-204" y="-731">SectionA1_scanner_finish</name>
@@ -314,7 +297,7 @@ int belt;
 		</location>
 		<location id="id31" x="-221" y="-578">
 			<name x="-204" y="-586">SectionB1_start</name>
-			<label kind="invariant" x="-204" y="-569">bagMovement&lt;=11</label>
+			<label kind="invariant" x="-204" y="-569">bagMovement&lt;=12</label>
 		</location>
 		<location id="id32" x="858" y="-306">
 			<name x="875" y="-315">SetionB2_end</name>
@@ -322,7 +305,7 @@ int belt;
 		</location>
 		<location id="id33" x="858" y="-433">
 			<name x="867" y="-467">SectionB2_stop_position</name>
-			<label kind="invariant" x="875" y="-450">bagMovement&lt;=2</label>
+			<label kind="invariant" x="875" y="-450">bagMovement&lt;=1</label>
 		</location>
 		<location id="id34" x="858" y="-714">
 			<name x="875" y="-723">SectionA2_scanner_finish</name>
@@ -342,9 +325,33 @@ int belt;
 		</location>
 		<location id="id38" x="858" y="-570">
 			<name x="875" y="-578">SectionB2_start</name>
-			<label kind="invariant" x="875" y="-561">bagMovement&lt;=11</label>
+			<label kind="invariant" x="875" y="-561">bagMovement&lt;=12</label>
 		</location>
 		<init ref="id24"/>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id37"/>
+			<label kind="guard" x="510" y="-926">!motorStop</label>
+			<label kind="synchronisation" x="510" y="-909">Bag[Y][RIGHT]?</label>
+			<label kind="assignment" x="510" y="-892">bagMovement:=0,
+isBlocked:=true,
+privateColor:=Y,
+belt := RIGHT</label>
+			<nail x="382" y="-892"/>
+			<nail x="765" y="-892"/>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id27"/>
+			<label kind="guard" x="85" y="-926">!motorStop</label>
+			<label kind="synchronisation" x="85" y="-909">Bag[Y][LEFT]?</label>
+			<label kind="assignment" x="85" y="-884">bagMovement:=0,
+isBlocked:=true,
+privateColor:=Y,
+belt = LEFT</label>
+			<nail x="314" y="-892"/>
+			<nail x="-8" y="-892"/>
+		</transition>
 		<transition>
 			<source ref="id29"/>
 			<target ref="id13"/>
@@ -399,21 +406,12 @@ bagMovement&gt;=24</label>
 		<transition>
 			<source ref="id24"/>
 			<target ref="id37"/>
-<<<<<<< Updated upstream
-			<label kind="guard" x="612" y="-1071">!motorStop &amp;&amp;
-Belt == RIGHT</label>
-=======
-			<label kind="guard" x="612" y="-1071">!motorStop</label>
->>>>>>> Stashed changes
-			<label kind="synchronisation" x="612" y="-1037">Bag[Color][RIGHT]?</label>
+			<label kind="guard" x="612" y="-1054">!motorStop</label>
+			<label kind="synchronisation" x="612" y="-1037">Bag[B][RIGHT]?</label>
 			<label kind="assignment" x="612" y="-1011">bagMovement:=0,
 isBlocked:=true,
-privateColor:=Color,
-<<<<<<< Updated upstream
-belt := Belt</label>
-=======
+privateColor:=B,
 belt := RIGHT</label>
->>>>>>> Stashed changes
 		</transition>
 		<transition>
 			<source ref="id20"/>
@@ -431,7 +429,7 @@ belt := RIGHT</label>
 		<transition>
 			<source ref="id20"/>
 			<target ref="id11"/>
-			<label kind="guard" x="-212" y="-391">bagMovement&gt;=2 &amp;&amp;
+			<label kind="guard" x="-212" y="-391">bagMovement&gt;=1 &amp;&amp;
 !motorStop</label>
 			<label kind="assignment" x="-212" y="-357">bagMovement:=0</label>
 		</transition>
@@ -533,7 +531,7 @@ bagMovement&gt;=24</label>
 		<transition>
 			<source ref="id31"/>
 			<target ref="id20"/>
-			<label kind="guard" x="-204" y="-552">bagMovement&gt;=11 &amp;&amp;
+			<label kind="guard" x="-204" y="-552">bagMovement&gt;=12 &amp;&amp;
 !motorStop</label>
 			<label kind="assignment" x="-204" y="-501">bagMovement:=0</label>
 		</transition>
@@ -558,22 +556,13 @@ isRead</label>
 		<transition>
 			<source ref="id24"/>
 			<target ref="id27"/>
-<<<<<<< Updated upstream
-			<label kind="guard" x="25" y="-1071">!motorStop &amp;&amp;
-Belt == LEFT</label>
-=======
-			<label kind="guard" x="25" y="-1071">!motorStop</label>
->>>>>>> Stashed changes
-			<label kind="synchronisation" x="25" y="-1037">Bag[Color][LEFT]?</label>
+			<label kind="guard" x="25" y="-1054">!motorStop</label>
+			<label kind="synchronisation" x="25" y="-1037">Bag[B][LEFT]?</label>
 			<label kind="assignment" x="25" y="-1011">bagMovement:=0,
 isBlocked:=true,
-privateColor:=Color,
-<<<<<<< Updated upstream
-belt = Belt</label>
-=======
+privateColor:=B,
 belt = LEFT</label>
->>>>>>> Stashed changes
-			<label kind="comments" x="0" y="-909">privateColor:=(Color==B) ? BLACK : YELLOW,</label>
+			<label kind="comments" x="-552" y="-1003">privateColor:=(Color==B) ? BLACK : YELLOW,</label>
 		</transition>
 		<transition>
 			<source ref="id27"/>
@@ -586,7 +575,7 @@ sensorValue:=privateColor</label>
 		<transition>
 			<source ref="id33"/>
 			<target ref="id32"/>
-			<label kind="guard" x="867" y="-383">bagMovement&gt;=2 &amp;&amp;
+			<label kind="guard" x="867" y="-383">bagMovement&gt;=1 &amp;&amp;
 !motorStop</label>
 			<label kind="assignment" x="867" y="-349">bagMovement:=0</label>
 		</transition>
@@ -600,7 +589,7 @@ sensorValue:=privateColor</label>
 		<transition>
 			<source ref="id38"/>
 			<target ref="id33"/>
-			<label kind="guard" x="875" y="-544">bagMovement&gt;=11 &amp;&amp;
+			<label kind="guard" x="875" y="-544">bagMovement&gt;=12 &amp;&amp;
 !motorStop</label>
 			<label kind="assignment" x="875" y="-493">bagMovement:=0</label>
 		</transition>
@@ -634,9 +623,10 @@ sensorValue:=privateColor</label>
 	<template>
 		<name>SingleSort</name>
 		<parameter>int belt</parameter>
-		<declaration>clock done;
-//clock now;
-//clock systemTime;
+		<declaration>int done;
+clock sleep;
+int now;
+clock systemTime;
 bool firstBag = true;
 int thisBelt;
 int bagsOnBelt = 0;</declaration>
@@ -649,8 +639,8 @@ int bagsOnBelt = 0;</declaration>
 			<urgent/>
 		</location>
 		<location id="id41" x="-331" y="-357">
-			<name x="-339" y="-408">Wait</name>
-			<label kind="invariant" x="-356" y="-391">done&lt;=8</label>
+			<name x="-348" y="-408">Wait</name>
+			<label kind="invariant" x="-365" y="-391">sleep&lt;=8</label>
 		</location>
 		<location id="id42" x="102" y="-127">
 			<name x="119" y="-153">Decision</name>
@@ -665,7 +655,7 @@ int bagsOnBelt = 0;</declaration>
 		</location>
 		<location id="id45" x="-178" y="-127" color="#ff0000">
 			<name x="-221" y="-153">Stop</name>
-			<label kind="invariant" x="-255" y="-127">done&lt;=40</label>
+			<label kind="invariant" x="-314" y="-136">sleep&lt;=done-now</label>
 		</location>
 		<location id="id46" x="400" y="-127" color="#00ff00">
 			<name x="357" y="-153">Run</name>
@@ -673,14 +663,14 @@ int bagsOnBelt = 0;</declaration>
 		</location>
 		<location id="id47" x="102" y="-357" color="#ffa500">
 			<name x="85" y="-408">Sleep</name>
-			<label kind="invariant" x="68" y="-391">done&lt;=20</label>
+			<label kind="invariant" x="68" y="-391">sleep&lt;=20</label>
 		</location>
 		<location id="id48" x="-552" y="-357">
 			<name x="-578" y="-391">Awaitbag</name>
 		</location>
 		<location id="id49" x="-391" y="-102">
 			<name x="-400" y="-85">Init</name>
-			<label kind="comments" x="-586" y="-8">if belt==LEFT 
+			<label kind="comments" x="-578" y="-25">if belt==LEFT 
 longerPaths is to RIGHT</label>
 		</location>
 		<init ref="id49"/>
@@ -705,7 +695,7 @@ firstBag:=false</label>
 			<target ref="id39"/>
 			<label kind="assignment" x="-561" y="-93">ReceivingBag:=true,
 thisBelt:=belt,
-done:=0</label>
+done:=systemTime</label>
 			<nail x="-587" y="-102"/>
 		</transition>
 		<transition>
@@ -722,15 +712,15 @@ done:=0</label>
 		<transition>
 			<source ref="id40"/>
 			<target ref="id47"/>
-			<label kind="synchronisation" x="-85" y="-382">Passivate[belt]!</label>
-			<label kind="assignment" x="-59" y="-357">done:=0</label>
-			<label kind="comments" x="-76" y="-331">isRead:=true,</label>
+			<label kind="synchronisation" x="-68" y="-382">Passivate[belt]!</label>
+			<label kind="assignment" x="-42" y="-357">sleep:=0</label>
+			<label kind="comments" x="-59" y="-331">isRead:=true,</label>
 		</transition>
 		<transition>
 			<source ref="id41"/>
 			<target ref="id40"/>
-			<label kind="guard" x="-246" y="-357">done&gt;=8</label>
-			<label kind="synchronisation" x="-280" y="-382">Sensor[belt]!</label>
+			<label kind="guard" x="-255" y="-357">sleep&gt;=8</label>
+			<label kind="synchronisation" x="-272" y="-382">Sensor[belt]!</label>
 		</transition>
 		<transition>
 			<source ref="id48"/>
@@ -745,8 +735,8 @@ done:=0</label>
 		<transition>
 			<source ref="id42"/>
 			<target ref="id45"/>
-			<label kind="guard" x="-110" y="-153">bagsOnBelt&gt;1</label>
-			<label kind="assignment" x="-110" y="-127">done:=0,
+			<label kind="guard" x="-93" y="-153">now &lt; done</label>
+			<label kind="assignment" x="-110" y="-127">sleep:=0,
 motorStop:=true</label>
 		</transition>
 		<transition>
@@ -766,19 +756,20 @@ motorStop:=true</label>
 		<transition>
 			<source ref="id47"/>
 			<target ref="id46"/>
-			<label kind="guard" x="187" y="-357">((isForward &amp;&amp; isBlack) ||
-(!isForward &amp;&amp; !isBlack)) &amp;&amp;
-done&gt;=20</label>
-			<label kind="assignment" x="187" y="-374">done:=0</label>
+			<label kind="guard" x="187" y="-357">sleep&gt;=20 &amp;&amp;
+((isForward &amp;&amp; isBlack) ||
+(!isForward &amp;&amp; !isBlack))</label>
+			<label kind="assignment" x="187" y="-374">sleep:=0</label>
 			<nail x="400" y="-357"/>
 		</transition>
 		<transition>
 			<source ref="id47"/>
 			<target ref="id42"/>
-			<label kind="guard" x="111" y="-246">done&gt;=20 &amp;&amp;
+			<label kind="guard" x="110" y="-280">sleep&gt;=20 &amp;&amp;
 ((isForward &amp;&amp; !isBlack) || 
 (!isForward &amp;&amp; isBlack))</label>
-			<label kind="assignment" x="111" y="-263">done:=0</label>
+			<label kind="assignment" x="110" y="-229">sleep:=0,
+now:=systemTime</label>
 			<nail x="102" y="-204"/>
 		</transition>
 		<transition>
@@ -813,7 +804,7 @@ done&gt;=40</label>
 	<template>
 		<name>BaggageHandler</name>
 		<declaration>clock checkInDelay;
-int Color;
+int baggagehandleColor;
 int totalNoOfBags = 0;</declaration>
 		<location id="id50" x="68" y="8">
 			<name x="76" y="-25">BagDeployed</name>
@@ -821,11 +812,7 @@ int totalNoOfBags = 0;</declaration>
 		</location>
 		<location id="id51" x="-238" y="8">
 			<name x="-272" y="-25">Idle</name>
-<<<<<<< Updated upstream
-			<label kind="comments" x="-187" y="76">We assume that person loading
-=======
 			<label kind="comments" x="76" y="-136">We assume that person loading
->>>>>>> Stashed changes
  the bags on feed belt takes 
 1.4 seconds to put a bag at 
 either left or right side every time.</label>
@@ -834,17 +821,27 @@ either left or right side every time.</label>
 		<transition>
 			<source ref="id51"/>
 			<target ref="id50"/>
-			<label kind="select" x="-170" y="-187">randomColor : int [Y,B],
-whichBelt : int [LEFT, RIGHT]</label>
-			<label kind="guard" x="-144" y="-136">ReceivingBag &amp;&amp;
+			<label kind="select" x="-136" y="85">whichBelt : int[0,1]</label>
+			<label kind="guard" x="-127" y="127">ReceivingBag &amp;&amp;
 totalNoOfBags &lt; 4</label>
-			<label kind="synchronisation" x="-170" y="-153">Bag[randomColor][whichBelt]!</label>
-<<<<<<< Updated upstream
-			<label kind="assignment" x="-136" y="-93">checkInDelay:=0,
-Belt:=whichBelt</label>
-=======
-			<label kind="assignment" x="-136" y="-93">checkInDelay:=0</label>
->>>>>>> Stashed changes
+			<label kind="synchronisation" x="-127" y="110">Bag[Y][whichBelt]!</label>
+			<label kind="assignment" x="-195" y="170">checkInDelay:=0</label>
+			<nail x="-187" y="127"/>
+			<nail x="34" y="127"/>
+		</transition>
+		<transition>
+			<source ref="id51"/>
+			<target ref="id50"/>
+			<label kind="select" x="-170" y="-178">whichBelt : int[0,1]</label>
+			<label kind="guard" x="-170" y="-136">ReceivingBag &amp;&amp;
+totalNoOfBags &lt; 4</label>
+			<label kind="synchronisation" x="-170" y="-153">Bag[B][whichBelt]!</label>
+			<label kind="assignment" x="-195" y="-85">checkInDelay:=0</label>
+			<label kind="comments" x="-212" y="-306">randomColor : int[0,1],
+
+
+
+baggagehandleColor:=randomColor,</label>
 			<nail x="-195" y="-93"/>
 			<nail x="34" y="-93"/>
 		</transition>
@@ -870,11 +867,7 @@ SensorLeft = BagSensor(LEFT);
 SensorRight = BagSensor(RIGHT);
 // List one or more processes to be composed into a system.
 // system MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;
-<<<<<<< Updated upstream
-system MotorC, Executer, SensorLeft, SensorRight, BaggageHandler, SSLeft, SSRight, Bag1;
-=======
-system MotorC, Executer, SensorLeft, SensorRight, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;
->>>>>>> Stashed changes
+system MotorC, Executer, SensorLeft, BaggageHandler, SSLeft, Bag1, Bag2, Bag3;
 </system>
 	<queries>
 		<query>
