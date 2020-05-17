@@ -6,7 +6,9 @@ urgent chan Execute;
 broadcast chan SensorChanged;
 chan Activate[2];
 chan Passivate[2];
-const int NoOfBags = 3-1;
+
+const int N = 5;
+typedef int[0,N-1] t_id;
 
 //MotorFeedbelt
 chan toggleMotor[2];
@@ -276,6 +278,7 @@ Distribution belt C</label>
 	</template>
 	<template>
 		<name>bagMovement</name>
+		<parameter>t_id id</parameter>
 		<declaration>clock bagMovement;
 int privateColor = -1;
 int belt = -1;
@@ -286,6 +289,7 @@ int belt = -1;
 		</location>
 		<location id="id12" x="-408" y="-433">
 			<name x="-459" y="-467">StopMF</name>
+			<urgent/>
 		</location>
 		<location id="id13" x="-221" y="-935">
 			<name x="-204" y="-943">SectionA1_scanner_read</name>
@@ -347,9 +351,9 @@ int belt = -1;
 			<name x="-212" y="-467">SectionB1_stop_position</name>
 			<urgent/>
 		</location>
-		<location id="id28" x="-221" y="-722">
-			<name x="-204" y="-731">SectionA1_scanner_finish</name>
-			<label kind="invariant" x="-204" y="-714">bagMovement&lt;=2</label>
+		<location id="id28" x="-221" y="-739">
+			<name x="-204" y="-748">SectionA1_scanner_finish</name>
+			<label kind="invariant" x="-204" y="-731">bagMovement&lt;=2</label>
 		</location>
 		<location id="id29" x="246" y="187">
 			<name x="212" y="204">FinalState</name>
@@ -462,8 +466,8 @@ sensorValue:=BL</label>
 			<target ref="id28"/>
 			<label kind="guard" x="-204" y="-850">bagMovement==12 &amp;&amp;
 !motorStop</label>
-			<label kind="synchronisation" x="-204" y="-816">SensorChanged!</label>
-			<label kind="assignment" x="-204" y="-799">bagMovement:=0,
+			<label kind="synchronisation" x="-204" y="-867">SensorChanged!</label>
+			<label kind="assignment" x="-204" y="-816">bagMovement:=0,
 sensorValue:=F</label>
 		</transition>
 		<transition>
@@ -668,10 +672,10 @@ bagMovement&gt;=24</label>
 		<transition>
 			<source ref="id28"/>
 			<target ref="id37"/>
-			<label kind="guard" x="-204" y="-688">bagMovement==2 &amp;&amp;
+			<label kind="guard" x="-204" y="-680">bagMovement==2 &amp;&amp;
 !motorStop</label>
-			<label kind="synchronisation" x="-204" y="-654">SensorChanged!</label>
-			<label kind="assignment" x="-204" y="-637">bagMovement:=0,
+			<label kind="synchronisation" x="-204" y="-697">SensorChanged!</label>
+			<label kind="assignment" x="-204" y="-646">bagMovement:=0,
 sensorClear[LEFT]:=true</label>
 		</transition>
 		<transition>
@@ -726,13 +730,9 @@ sensorValue:=privateColor</label>
 		<parameter>int belt</parameter>
 		<declaration>clock systemTime;
 clock sleep;
-clock helperTimer;
 int now;
 int done;
-
-bool firstBag = true;
-int thisBelt;
-int bagsOnBelt = 0;</declaration>
+int thisBelt;</declaration>
 		<location id="id45" x="-408" y="0" color="#ff0000">
 			<name x="-467" y="8">ERROR</name>
 		</location>
@@ -785,7 +785,6 @@ longerPaths is to RIGHT</label>
 			<label kind="guard" x="-705" y="-374">readSensorValue&lt;=BLOCKED</label>
 			<label kind="synchronisation" x="-705" y="-408">Execute?</label>
 			<label kind="assignment" x="-705" y="-357">ReceivingBag:=false,
-bagsOnBelt:=bagsOnBelt+1,
 sleep:=0</label>
 			<nail x="-654" y="-357"/>
 		</transition>
@@ -839,8 +838,7 @@ systemTime:=0</label>
 			<source ref="id53"/>
 			<target ref="id47"/>
 			<label kind="guard" x="-808" y="229">sleep&gt;=12</label>
-			<label kind="assignment" x="-536" y="246">ReceivingBag:=true,
-firstBag:=false</label>
+			<label kind="assignment" x="-536" y="246">ReceivingBag:=true</label>
 			<nail x="501" y="195"/>
 			<nail x="501" y="306"/>
 			<nail x="-918" y="306"/>
@@ -877,8 +875,7 @@ destA:=true : destA:=false</label>
 			<target ref="id52"/>
 			<label kind="guard" x="-119" y="-26">systemTime &lt; done</label>
 			<label kind="assignment" x="-110" y="0">sleep:=0,
-motorStop:=true,
-helperTimer:=0</label>
+motorStop:=true</label>
 		</transition>
 		<transition>
 			<source ref="id50"/>
@@ -918,7 +915,8 @@ int totalNoOfBags = 0;</declaration>
 		<transition>
 			<source ref="id57"/>
 			<target ref="id60"/>
-			<label kind="assignment" x="-416" y="-17">checkInDelay:=0</label>
+			<label kind="assignment" x="-416" y="-17">checkInDelay:=0,
+totalNoOfBags:=totalNoOfBags+1</label>
 		</transition>
 		<transition>
 			<source ref="id59"/>
@@ -951,8 +949,9 @@ int totalNoOfBags = 0;</declaration>
 		<transition>
 			<source ref="id60"/>
 			<target ref="id58"/>
-			<label kind="guard" x="-561" y="-297">sensorClear[LEFT] &amp;&amp;
-sensorActive</label>
+			<label kind="guard" x="-569" y="-229">sensorClear[LEFT] &amp;&amp;
+sensorActive &amp;&amp;
+totalNoOfBags &lt; N-1</label>
 			<nail x="-586" y="-238"/>
 		</transition>
 		<transition>
@@ -965,9 +964,9 @@ fakeStop</label>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
-Bag1 = bagMovement();
-Bag2 = bagMovement();
-Bag3 = bagMovement();
+//Bag1 = bagMovement();
+//Bag2 = bagMovement();
+//Bag3 = bagMovement();
 //MotorA = MotorFeed(LEFT);
 //MotorB = MotorFeed(RIGHT);
 //MotorC = MotorDistribution(Reverse);
@@ -978,7 +977,7 @@ SensorLeft = BagSensor(LEFT);
 SensorRight = BagSensor(RIGHT);
 // List one or more processes to be composed into a system.
 // system MotorC, SensorLeft, SensorRight, Executer, BaggageHandler, SSLeft, SSRight, Bag1, Bag2, Bag3;
-system SensorLeft, BaggageHandler, MotorC, Executer, SSLeft, Bag1, Bag2, Bag3;
+system SensorLeft, BaggageHandler, MotorC, Executer, SSLeft, bagMovement;
 </system>
 	<queries>
 		<query>
