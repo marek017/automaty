@@ -8,9 +8,10 @@ chan Activate[2];
 chan Passivate[2];
 
 //To ensure only right feed belt is used
-bool fakeStop=false;
+const bool enableCheckIn1 = true;
+const bool enableCheckIn2 = false;
 
-const int N = 5;
+const int N = 3;
 typedef int[0,N-1] t_id;
 
 //MotorFeedbelt
@@ -278,8 +279,8 @@ Distribution belt C</label>
 		<declaration>clock bagMovement;
 int privateColor = -1;
 int belt = -1;</declaration>
-		<location id="id11" x="-612" y="-433" color="#ff0000">
-			<name x="-697" y="-459">ERROR_A</name>
+		<location id="id10" x="425" y="-433" color="#ff0000">
+			<name x="314" y="-442">ERROR_B</name>
 		</location>
 		<location id="id12" x="-408" y="-552" color="#ffa500">
 		</location>
@@ -287,9 +288,9 @@ int belt = -1;</declaration>
 			<name x="-86" y="-1351">SenosrNotifiedA1</name>
 			<committed/>
 		</location>
-		<location id="id14" x="-408" y="-433">
-			<name x="-476" y="-425">TestStop</name>
-			<urgent/>
+		<location id="id13" x="629" y="-1198">
+			<name x="578" y="-1241">BagOnBeltB</name>
+			<committed/>
 		</location>
 		<location id="id15" x="-221" y="-935">
 			<name x="-204" y="-943">SectionA1_scanner_read</name>
@@ -491,10 +492,11 @@ sensorValue[LEFT]:=BL</label>
 			<nail x="-246" y="-340"/>
 		</transition>
 		<transition>
-			<source ref="id28"/>
-			<target ref="id14"/>
-			<label kind="guard" x="-374" y="-433">motorStop[LEFT]</label>
-			<label kind="synchronisation" x="-357" y="-450">Execute?</label>
+			<source ref="id40"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-578" y="-595">bagMovement&lt;12 &amp;&amp;
+motorStop[LEFT]</label>
+			<nail x="-612" y="-578"/>
 		</transition>
 		<transition>
 			<source ref="id15"/>
@@ -507,20 +509,36 @@ sensorValue[LEFT]:=F</label>
 		<transition>
 			<source ref="id31"/>
 			<target ref="id16"/>
-			<label kind="synchronisation" x="76" y="-1096">deployBag[Y][LEFT]?</label>
-			<label kind="assignment" x="76" y="-1079">privateColor:=Y,
-belt:=LEFT,
-sensorValue[LEFT]:=F</label>
+			<label kind="guard" x="-408" y="-501">bagMovement == 0</label>
+		</transition>
+		<transition>
+			<source ref="id30"/>
+			<target ref="id34"/>
+			<label kind="guard" x="-204" y="-374">bagMovement&gt;=12 &amp;&amp; 
+!motorStop[LEFT]</label>
+			<label kind="assignment" x="-204" y="-332">bagMovement:=0</label>
+		</transition>
+		<transition>
+			<source ref="id30"/>
+			<target ref="id17"/>
+			<label kind="guard" x="-374" y="-433">motorStop[LEFT]</label>
+			<label kind="synchronisation" x="-357" y="-450">Execute?</label>
+		</transition>
+		<transition>
+			<source ref="id33"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="119" y="-1113">deployBag[Y][LEFT]?</label>
+			<label kind="assignment" x="119" y="-1096">privateColor:=Y,
+belt:=LEFT</label>
 			<nail x="314" y="-1079"/>
 			<nail x="51" y="-1079"/>
 		</transition>
 		<transition>
-			<source ref="id31"/>
-			<target ref="id16"/>
-			<label kind="synchronisation" x="170" y="-1215">deployBag[B][LEFT]?</label>
-			<label kind="assignment" x="170" y="-1198">privateColor:=B,
-belt:=LEFT,
-sensorValue[LEFT]:=F</label>
+			<source ref="id33"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="136" y="-1215">deployBag[B][LEFT]?</label>
+			<label kind="assignment" x="136" y="-1198">privateColor:=B,
+belt:=LEFT</label>
 		</transition>
 		<transition>
 			<source ref="id31"/>
@@ -945,7 +963,9 @@ totalNoOfBags:=totalNoOfBags+1</label>
 			<target ref="id57"/>
 			<label kind="guard" x="-569" y="-229">sensorClear[LEFT] &amp;&amp;
 sensorActive[LEFT] &amp;&amp;
-totalNoOfBags &lt; N-1</label>
+totalNoOfBags &lt; N &amp;&amp;
+checkInDelay &gt;= 14 &amp;&amp;
+enableCheckIn1</label>
 			<nail x="-586" y="-238"/>
 		</transition>
 		<transition>
@@ -953,7 +973,9 @@ totalNoOfBags &lt; N-1</label>
 			<target ref="id58"/>
 			<label kind="guard" x="-569" y="153">sensorClear[RIGHT] &amp;&amp;
 sensorActive[RIGHT] &amp;&amp;
-fakeStop</label>
+totalNoOfBags &lt; N &amp;&amp;
+checkInDelay &gt;= 14 &amp;&amp;
+enableCheckIn2</label>
 			<nail x="-586" y="212"/>
 		</transition>
 	</template>
@@ -1005,6 +1027,26 @@ system SensorLeft, BaggageHandler, MotorC, Executer, SSLeft, Bag;
 			</comment>
 		</query>
 		<query>
+			<formula>=============================================================================================== NEW VERIFICATION BELOW
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>Bag(0).DestinationB --&gt; Bag(0).privateColor==0
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] ((Bag(0).DestinationA imply (A&lt;&gt; Bag(0).privateColor==1))
+			</formula>
+			<comment>p --&gt; q = A[] (p imply A&lt;&gt; q
+
+or (Bag(0).DestinationB imply (A&lt;&gt; Bag(0).privateColor==0)))
+			</comment>
+		</query>
+		<query>
 			<formula>E&lt;&gt; not ((Bag1.SectionF1_A or Bag1.SectionF1_B or Bag1.SectionD2_start or  Bag1.SectionD2_end or Bag1.SectionE2_start or Bag1.SectionE2_end) and (MotorC.Forward))
 			</formula>
 			<comment>Check if distribution belt is not reversed when it carries a bag.
@@ -1019,7 +1061,50 @@ system SensorLeft, BaggageHandler, MotorC, Executer, SSLeft, Bag;
 		<query>
 			<formula>A[] (not deadlock)
 			</formula>
-			<comment>Checks wether model system has no deadlocks.
+			<comment>NEW
+Check if evry bag is eventually delivered.
+			</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; not ((Bag(0).SectionE1_start) and (MotorC.Backward))
+			</formula>
+			<comment>NEW Check if distribution belt is not reversed when it caries a bag.
+			</comment>
+		</query>
+		<query>
+			<formula>========= Proper verification ================
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>(Bag(0).BagOnBeltA or Bag(0).BagOnBeltB) --&gt; Bag(0).FinalState
+			</formula>
+			<comment>Ana arbitrary bag (eg. no. 0) placed on the belt will eventually arrive at a destination
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall(i:t_id) (Bag(i).DestinationA imply Bag(i).privateColor==B) and (Bag(i).DestinationB imply Bag(i).privateColor==Y)
+			</formula>
+			<comment>Bags are sorted corectly
+			</comment>
+		</query>
+		<query>
+			<formula>A[] forall(i:t_id) not (Bag(i).ERROR_A or Bag(i).ERROR_B)
+			</formula>
+			<comment>No erroneous control
+			</comment>
+		</query>
+		<query>
+			<formula>A[] (deadlock imply forall(i:t_id) Bag(i).FinalState)
+			</formula>
+			<comment>Deadlock should onlyl occur when all bags are through
+			</comment>
+		</query>
+		<query>
+			<formula>
+			</formula>
+			<comment>Dumme end line
 			</comment>
 		</query>
 	</queries>
