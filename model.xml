@@ -536,7 +536,7 @@ bagMovement&gt;=24</label>
 			<source ref="id23"/>
 			<target ref="id18"/>
 			<label kind="guard" x="-161" y="25">bagMovement&gt;=21 &amp;&amp;
-!isForward</label>
+isForward</label>
 		</transition>
 		<transition>
 			<source ref="id31"/>
