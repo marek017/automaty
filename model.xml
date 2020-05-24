@@ -12,7 +12,7 @@ const bool enableCheckIn1 = true;
 const bool enableCheckIn2 = true;
 
 // Number of Bags
-const int N = 6;
+const int N = 2;
 typedef int[0,N-1] t_id;
 
 //MotorFeedbelt
@@ -57,6 +57,7 @@ broadcast chan Tick;
 
 //DistributionControllerReverse
 bool doReverse;
+int tickCount = 0;
 
 //SingleSort
 bool ReceivingBag = false;
@@ -658,7 +659,7 @@ sensorValue[RIGHT]:=BLOCKED</label>
 		<declaration>clock systemTime;
 clock sleep;
 int done;
-int tickCount = 0;
+//int tickCount = 0;
 int waitTillRelease;
 int bagColor;
 bool destA;</declaration>
@@ -666,7 +667,7 @@ bool destA;</declaration>
 			<name x="-102" y="314">Waiting</name>
 		</location>
 		<location id="id44" x="153" y="187">
-			<urgent/>
+			<committed/>
 		</location>
 		<location id="id45" x="153" y="8">
 			<name x="170" y="-25">SynchroniseWait</name>
@@ -708,7 +709,6 @@ longerPaths is to RIGHT</label>
 			<target ref="id43"/>
 			<label kind="guard" x="-153" y="450">tickCount&lt;waitTillRelease+1</label>
 			<label kind="synchronisation" x="-85" y="408">Tick?</label>
-			<label kind="assignment" x="-153" y="433">tickCount:=tickCount+10</label>
 			<nail x="8" y="433"/>
 			<nail x="-153" y="433"/>
 		</transition>
@@ -729,7 +729,7 @@ motorStop[belt]:=false</label>
 		<transition>
 			<source ref="id44"/>
 			<target ref="id50"/>
-			<label kind="guard" x="-195" y="161">waitTillRelease==0</label>
+			<label kind="guard" x="-195" y="161">waitTillRelease&lt;=0</label>
 			<label kind="assignment" x="-195" y="187">sleep:=0,
 motorStop[belt]:=false</label>
 		</transition>
@@ -798,8 +798,8 @@ bagColor:=YELLOW : bagColor:=BLACK</label>
 		<declaration>clock systemTime;
 clock sleep;
 int done = 0;
+int tillBeltFree = 0;
 int localBelt;
-int tickCount = 0;
 bool destA = true;
 bool lastDestinationA = true;
 </declaration>
@@ -814,22 +814,17 @@ bool lastDestinationA = true;
 			<name x="-416" y="67">Returned</name>
 			<urgent/>
 		</location>
-		<location id="id57" x="1071" y="-527">
+		<location id="id57" x="552" y="-586">
 			<urgent/>
 		</location>
-		<location id="id58" x="646" y="-366">
-			<label kind="comments" x="680" y="-493">TODO:
-Reverse chanel
-,
-mozes vobec ist 
-	ked nemozes kolko caka aby si mohol ist
-	zostavajuci cast + na ktoru stranu ide</label>
+		<location id="id58" x="127" y="-425">
+			<label kind="comments" x="161" y="-552">jemu este 12 TU trva kym sa dostane do stop position</label>
 		</location>
-		<location id="id59" x="646" y="-527">
+		<location id="id59" x="127" y="-586">
 			<urgent/>
 		</location>
-		<location id="id60" x="229" y="-527">
-			<name x="144" y="-561">LongerPath</name>
+		<location id="id60" x="-290" y="-586">
+			<name x="-375" y="-620">LongerPath</name>
 			<urgent/>
 		</location>
 		<location id="id61" x="-110" y="-144">
@@ -848,9 +843,11 @@ change YELLOW &amp; BLACK to 0/1 as bool destA</label>
 		<transition>
 			<source ref="id55"/>
 			<target ref="id56"/>
-			<label kind="assignment" x="433" y="-238">((localBelt==LEFT &amp;&amp; !destA) || 
+			<label kind="assignment" x="408" y="-229">((localBelt==LEFT &amp;&amp; !destA) || 
 (localBelt==RIGHT &amp;&amp; destA))? 
-done:=81 : done:=0</label>
+done:=81+2+(tillBeltFree-tickCount) : done:=0+2+(tillBeltFree-tickCount),
+tillBeltFree:=done,
+tickCount:=0</label>
 			<nail x="663" y="-246"/>
 			<nail x="663" y="272"/>
 			<nail x="-340" y="263"/>
@@ -862,8 +859,9 @@ done:=81 : done:=0</label>
 (!lastDestinationA &amp;&amp; destA)</label>
 			<label kind="assignment" x="17" y="-136">((lastDestinationA &amp;&amp; localBelt==LEFT &amp;&amp; destA) || 
 (!lastDestinationA &amp;&amp; localBelt==RIGHT &amp;&amp; !destA))? 
-done:=40 : done:=93,
-doReverse:=true</label>
+done:=52+2+(tillBeltFree-tickCount) : done:=105+2+(tillBeltFree-tickCount),
+doReverse:=true,
+tickCount:=0</label>
 			<nail x="425" y="-144"/>
 		</transition>
 		<transition>
@@ -872,14 +870,14 @@ doReverse:=true</label>
 			<label kind="guard" x="-85" y="67">tickCount&gt;=done+1 &amp;&amp; doReverse</label>
 			<label kind="synchronisation" x="-8" y="50">Reverse!</label>
 			<label kind="assignment" x="-51" y="101">isForward:=!isForward,
-done:=0</label>
+done:=0,
+tickCount:=0</label>
 		</transition>
 		<transition>
 			<source ref="id54"/>
 			<target ref="id54"/>
 			<label kind="guard" x="493" y="76">tickCount&lt;done+1</label>
 			<label kind="synchronisation" x="493" y="59">Tick?</label>
-			<label kind="assignment" x="493" y="93">tickCount:=tickCount+10</label>
 			<nail x="484" y="42"/>
 			<nail x="484" y="144"/>
 		</transition>
@@ -893,14 +891,14 @@ done:=0</label>
 		<transition>
 			<source ref="id56"/>
 			<target ref="id62"/>
-			<label kind="synchronisation" x="-467" y="-102">Return[localBelt]!</label>
-			<label kind="assignment" x="-493" y="-68">lastDestinationA:=destA,
+			<label kind="synchronisation" x="-493" y="-102">Return[localBelt]!</label>
+			<label kind="assignment" x="-501" y="-85">lastDestinationA:=destA,
 returnValue:=done</label>
 		</transition>
 		<transition>
 			<source ref="id59"/>
 			<target ref="id57"/>
-			<label kind="guard" x="697" y="-578">(lastDestinationA==destA &amp;&amp; localBelt==LEFT)||
+			<label kind="guard" x="178" y="-637">(lastDestinationA==destA &amp;&amp; localBelt==LEFT)||
 (!lastDestinationA==!destA &amp;&amp; localBelt==RIGHT)</label>
 		</transition>
 		<transition>
@@ -910,9 +908,9 @@ returnValue:=done</label>
 		<transition>
 			<source ref="id60"/>
 			<target ref="id59"/>
-			<label kind="guard" x="280" y="-578">(lastDestinationA &amp;&amp; localBelt==RIGHT &amp;&amp; destA)||
+			<label kind="guard" x="-239" y="-637">(lastDestinationA &amp;&amp; localBelt==RIGHT &amp;&amp; destA)||
 (!lastDestinationA &amp;&amp; localBelt==LEFT &amp;&amp; !destA)</label>
-			<label kind="synchronisation" x="425" y="-518">Tick!</label>
+			<label kind="synchronisation" x="-94" y="-577">Tick!</label>
 		</transition>
 		<transition>
 			<source ref="id62"/>
@@ -966,7 +964,8 @@ localBelt:=LEFT</label>
 			<target ref="id64"/>
 			<label kind="guard" x="59" y="-17">localTock&gt;=10</label>
 			<label kind="synchronisation" x="110" y="-34">Tick!</label>
-			<label kind="assignment" x="76" y="0">localTock:=0</label>
+			<label kind="assignment" x="76" y="0">localTock:=0,
+tickCount:=tickCount+10</label>
 			<nail x="161" y="68"/>
 			<nail x="161" y="-76"/>
 		</transition>
