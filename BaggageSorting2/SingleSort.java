@@ -38,8 +38,8 @@ class Timeout extends Thread {
     synchronized boolean Tick(int tockCount) {
         try {
             while(tockCount > 0){
-                Thread.sleep(100);
-                tockCount = tockCount - 1;
+                Thread.sleep(1000);
+                tockCount = tockCount - 10;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
