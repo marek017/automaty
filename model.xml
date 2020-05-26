@@ -798,7 +798,7 @@ bagColor:=YELLOW : bagColor:=BLACK</label>
 		<declaration>clock systemTime;
 clock sleep;
 int done = 0;
-int tillBeltFree = 0;
+//int tillBeltFree = 0;
 int localBelt;
 bool destA = true;
 bool lastDestinationA = true;
@@ -830,10 +830,9 @@ change YELLOW &amp; BLACK to 0/1 as bool destA</label>
 		<transition>
 			<source ref="id55"/>
 			<target ref="id56"/>
-			<label kind="assignment" x="357" y="-246">((localBelt==LEFT &amp;&amp; !destA) || 
-(localBelt==RIGHT &amp;&amp; destA))? 
+			<label kind="assignment" x="357" y="-246">((localBelt==LEFT &amp;&amp; !lastDestinationA) || 
+(localBelt==RIGHT &amp;&amp; lastDestinationA))? 
 done:=81 : done:=0,
-tillBeltFree:=done,
 tickCount:=0</label>
 			<label kind="comments" x="348" y="-297">done:=81+2+(tillBeltFree-tickCount) : done:=0+2+(tillBeltFree-tickCount),</label>
 			<nail x="663" y="-246"/>
@@ -858,9 +857,6 @@ tickCount:=0</label>
 			<label kind="guard" x="-42" y="68">tickCount&gt;=done+1</label>
 			<label kind="synchronisation" x="-8" y="50">Reverse!</label>
 			<label kind="assignment" x="-51" y="101">isForward:=!isForward,
-((localBelt==LEFT &amp;&amp; destA) || 
-(localBelt==RIGHT &amp;&amp; !destA))? 
-tillBeltFree:=52 : tillBeltFree:=105,
 done:=0,
 tickCount:=0</label>
 		</transition>
