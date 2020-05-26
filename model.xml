@@ -800,6 +800,7 @@ clock sleep;
 int done = 0;
 //int tillBeltFree = 0;
 int localBelt;
+int lastBelt = LEFT;
 bool destA = true;
 bool lastDestinationA = true;
 </declaration>
@@ -830,8 +831,8 @@ change YELLOW &amp; BLACK to 0/1 as bool destA</label>
 		<transition>
 			<source ref="id55"/>
 			<target ref="id56"/>
-			<label kind="assignment" x="357" y="-246">((localBelt==LEFT &amp;&amp; !lastDestinationA) || 
-(localBelt==RIGHT &amp;&amp; lastDestinationA))? 
+			<label kind="assignment" x="357" y="-246">((lastBelt==LEFT &amp;&amp; localBelt!=LEFT &amp;&amp; !lastDestinationA) || 
+(lastBelt==RIGHT &amp;&amp; localBelt!=RIGHT &amp;&amp; lastDestinationA))? 
 done:=81 : done:=0,
 tickCount:=0</label>
 			<label kind="comments" x="348" y="-297">done:=81+2+(tillBeltFree-tickCount) : done:=0+2+(tillBeltFree-tickCount),</label>
@@ -844,8 +845,8 @@ tickCount:=0</label>
 			<target ref="id54"/>
 			<label kind="guard" x="93" y="-187">(lastDestinationA &amp;&amp; !destA)||
 (!lastDestinationA &amp;&amp; destA)</label>
-			<label kind="assignment" x="85" y="-136">((localBelt==LEFT &amp;&amp; destA) || 
-(localBelt==RIGHT &amp;&amp; !destA))? 
+			<label kind="assignment" x="59" y="-127">((lastBelt==LEFT &amp;&amp; lastDestinationA) || 
+(lastBelt==RIGHT &amp;&amp; !lastDestinationA))? 
 done:=52+2 : done:=105+2,
 tickCount:=0</label>
 			<label kind="comments" x="-93" y="-25">done:=52+2+(tillBeltFree-tickCount) : done:=105+2+(tillBeltFree-tickCount),</label>
@@ -880,6 +881,7 @@ tickCount:=0</label>
 			<target ref="id58"/>
 			<label kind="synchronisation" x="-493" y="-102">Return[localBelt]!</label>
 			<label kind="assignment" x="-501" y="-85">lastDestinationA:=destA,
+lastBelt:=localBelt,
 returnValue:=done</label>
 		</transition>
 		<transition>
